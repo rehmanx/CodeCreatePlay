@@ -2,8 +2,9 @@
 
 
 To generate points inside a circle , let us first visualize a circle, we are going to do this is UnityEditor mode.
- - create a new C# script **CircleDistribution.cs**, and attach it to a **GameObject**.
- - open **CircleDistribution.cs**, add 2 new floats **radius** and **segments**
+ - create a new C# script **RandUniformPointsInCircle.cs**, and attach it to a **GameObject**.
+ - open **RandUniformPointsInCircle.cs**, add 2 new floats **radius** and **segments**
+ - create an editor script for **RandUniformPointsInCircle**, call it **RandUniformPointsInCircleEd.cs**
 
 ```
 public class CircleDistribution : MonoBehaviour
@@ -14,12 +15,7 @@ public class CircleDistribution : MonoBehaviour
 }
 ```
 
-- create a new folder **Editor** and in it create a new editor script **CircleDistributionEd.cs** for **CircleDistribution** c;lass.
-- open the **CircleDistributionEd.cs** script &
-
-- **1-** add the [CustomEditor](https://docs.unity3d.com/Manual/editor-CustomEditors.html) attribute for **CircleDistributionEd* class.
-**2-** create a new method [OnSceneGUI](https://docs.unity3d.com/ScriptReference/Editor.OnSceneGUI.html)
-**3-** create a new method **DrawCircle** and call it from **OnSceneGUI** method.
+- open the **RandUniformPointsInCircleEd.cs** script & create a new method **DrawCircle** and call it from **OnSceneGUI** method.
 
 ```
 using System;
@@ -48,7 +44,7 @@ public class CircleDistributionEd : UnityEditor.Editor
 }
 ```
 
-- The **X** and **Y**  positions from origin. on the circumference of a unit circle meaning circle with radius 1, are given by **X-position** = cos (angle) and **Y-position** = sin(angle), to scale a unity circle multiply these positions with our custom radius, **X-position** = cos (angle) * radius and **Y-position** = sin (angle) * radius.
+- The **X** and **Y**  positions from origin. on the circumference of a unit circle meaning circle with radius 1, are given by **X-position** = cos (angle) and **Y-position** = sin(angle), to scale a unit circle multiply these positions with our custom radius, **X-position** = cos (angle) * radius and **Y-position** = sin (angle) * radius.
 
 ![circle_illustration](https://user-images.githubusercontent.com/23467551/135723961-eaa98723-320b-4c7b-b1d2-5d92196c002a.png)
 
