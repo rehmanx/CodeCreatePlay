@@ -124,4 +124,4 @@ We will use [Handles](https://docs.unity3d.com/ScriptReference/Handles.html) to 
 
 ![02](https://user-images.githubusercontent.com/23467551/135799583-beb123ab-6da9-455b-b419-bed195f65e3a.gif)
 
-- Everything now works as expected.
+- Everything now works as expected, now to generate random uniform points inside the circle.
