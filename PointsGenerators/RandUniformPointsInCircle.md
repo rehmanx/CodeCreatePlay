@@ -124,4 +124,81 @@ We will use [Handles](https://docs.unity3d.com/ScriptReference/Handles.html) to 
 
 ![02](https://user-images.githubusercontent.com/23467551/135799583-beb123ab-6da9-455b-b419-bed195f65e3a.gif)
 
-- Everything now works as expected, now to generate random uniform points inside the circle.
+- We have a circle now, let's get back to original problem.. we have a circle and we want to generate some points in it that are more or less evenly spaced, a naive approach would be a choose two instances of random number generators one in range [0, 1] to select a random distance in a unit circle and another in range [0, 2π] to set angular position, so to do it in code create a new method **GenerateRandom** in **RandUniformPointsInCircle**. 
+
+```
+    /// <summary>
+    /// generates random points inside a circle of radius r.
+    /// </summary>
+    /// <param name="count"> number of points to generate </param>
+    /// <param name="radius"> radius of the circle </param>
+    /// <returns></returns>
+    public List<Vector3> GenerateRandom(int count, float radius)
+    {
+        generatedPoints.Clear();
+
+        for (int i = 0; i < count; i++)
+        {
+            float theta = 2 * Mathf.PI * UnityEngine.Random.Range(0f, 1f); 
+            float r = radius * UnityEngine.Random.Range(0f, 1f);
+            Vector3 pos = new Vector3(r * Mathf.Cos(theta), 0, r * Mathf.Sin(theta));
+            generatedPoints.Add(pos);
+        }
+
+        Debug.LogFormat("generated {0} points", generatedPoints.Count);
+        return generatedPoints;
+    }
+```
+
+- To call this method I have created a button in **OnInspectorGUI** of **RandUniformPointsInCircleEd** and to visualize the generated points create a new method **VisPoints** and call it from **OnSceneGUI**. The updated code for **RandUniformPointsInCircleEd** is shown.
+
+```
+[CustomEditor(typeof(RandUniformPointsInCircle))]
+public class RandUniformPointsInCircleEd : UnityEditor.Editor
+{
+    // private
+    RandUniformPointsInCircle rupc = null;
+
+    private void OnEnable()
+    {
+        rupc = target as RandUniformPointsInCircle;
+    }
+
+    public override void OnInspectorGUI()
+    {
+        base.OnInspectorGUI();
+
+        // button to call GenerateRandom method in RandUniformPointsInCircle.
+        if(GUILayout.Button("GenerateRandom"))
+        {
+            rupc.GenerateRandom(1000, rupc.circleRadius);
+            SceneView.RepaintAll();
+        }
+    }
+
+    private void OnSceneGUI()
+    {
+        DrawCircle();
+        VizPoints();
+    }
+
+    private void VizPoints()
+    {
+        Handles.color = Color.red;
+        foreach (var pos in rupc.generatedPoints)
+            Handles.DrawSolidDisc(pos, rupc.transform.up, rupc.debugPointRadius);
+    }
+}
+```
+
+- The result looks something like this, with points clustered at the center.
+
+![Unity_nJS3Lq6AW2](https://user-images.githubusercontent.com/23467551/137636170-db2cabfd-05fe-4946-b6cc-1ba3e191ea56.png)
+
+And depending on the requirements this may or may not be what you want, the reason points are generated more dense near the origin is uniform distribution of points across the entire area of circle, as distance from origin increases the area of circle increases with it, twice as many points are needed to fill the larger areas, so the density of points is inversely propertional to area mathematically 
+
+<img src="https://latex.codecogs.com/gif.latex?f(x)&space;=&space;1/2\pi\&space;where\&space;2\pi\&space;is\&space;the\&space;area\&space;of\&space;circle\" title="f(x) = 1/2\pi\ where\ 2\pi\ is\ the\ area\ of\ circle\" />
+
+A graph of our current algorithm would look like this.
+
+![desmos-graph (1)](https://user-images.githubusercontent.com/23467551/137637021-a6e0e77f-f6d6-4beb-9d1d-25c16525c4a0.png)
