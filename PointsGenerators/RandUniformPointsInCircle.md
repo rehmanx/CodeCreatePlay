@@ -195,10 +195,78 @@ public class RandUniformPointsInCircleEd : UnityEditor.Editor
 
 ![Unity_nJS3Lq6AW2](https://user-images.githubusercontent.com/23467551/137636170-db2cabfd-05fe-4946-b6cc-1ba3e191ea56.png)
 
-And depending on the requirements this may or may not be what you want, the reason points are generated more dense near the origin is uniform distribution of points across the entire area of circle, as distance from origin increases the area of circle increases with it, twice as many points are needed to fill the larger areas, so the density of points is inversely propertional to area mathematically 
+And depending on the requirements this may or may not be what you want, the reason points are generated more dense near the origin is uniform distribution of points across the entire area of circle, as distance from origin increases the area of circular segments increases with it, twice as many points are needed to fill the larger areas, in other words the density of points is inversely propertional to area mathematically 
 
 <img src="https://latex.codecogs.com/gif.latex?f(x)&space;=&space;1/2\pi\&space;where\&space;2\pi\&space;is\&space;the\&space;area\&space;of\&space;circle\" title="f(x) = 1/2\pi\ where\ 2\pi\ is\ the\ area\ of\ circle\" />
 
-A graph of our current algorithm would look like this.
+A graph of our current algorithm would look like this, as we move from 0 to 1 on x, for every value on x same probability is given on y. 
 
-![desmos-graph (1)](https://user-images.githubusercontent.com/23467551/137637021-a6e0e77f-f6d6-4beb-9d1d-25c16525c4a0.png)
+![desmos-graph](https://user-images.githubusercontent.com/23467551/137637391-f00cd386-3349-4534-bd34-54ee5d4b0042.png)
+
+However to compensate for loss of desnity as distance from origin increases more probability should be given to larger areas, to do this we can utilize some builtin methods such as **power** or **square root**.   
+So if we choose a function **y=pow(x^1/2)** the graph would like this.
+
+![desmos-graph (1)](https://user-images.githubusercontent.com/23467551/137638437-eddb997e-922b-42c1-921b-adba7e29d3e6.png)
+
+- To do this code, create a new method **GenerateUniform** in **RandUniformPointsInCircle**.
+
+```
+    /// <summary>
+    /// uniformly generates random points inside a circle of radius r.
+    /// </summary>
+    /// <param name="count"> number of points to generate </param>
+    /// <param name="radius"> radius of the circle </param>
+    /// <returns></returns>
+    public List<Vector3> GenerateUniform(int count, float radius)
+    {
+        generatedPoints.Clear();
+
+        for (int i = 0; i < count; i++)
+        {
+            float theta = 2 * Mathf.PI * UnityEngine.Random.Range(0f, 1f);
+            var r = radius * Mathf.Pow(Random.Range(0f, 1f), 1 / 2f);
+            Vector3 pos = new Vector3(r * Mathf.Cos(theta), 0, r * Mathf.Sin(theta));
+            generatedPoints.Add(pos);
+        }
+
+        Debug.LogFormat("generated {0} points", generatedPoints.Count);
+        return generatedPoints;
+    }
+```
+
+and create a new button in **RandUniformPointsInCircleEd** to call this method.
+
+```
+[CustomEditor(typeof(RandUniformPointsInCircle))]
+public class RandUniformPointsInCircleEd : UnityEditor.Editor
+{
+    public override void OnInspectorGUI()
+    {
+        base.OnInspectorGUI();
+
+        // // button to call GenerateUniform method in RandUniformPointsInCircle.
+        if (GUILayout.Button("GenerateUniform"))
+        {
+            rupc.GenerateUniform(1000, rupc.circleRadius);
+            SceneView.RepaintAll();
+        }
+    }
+}
+```
+
+- The result look something like this, distribution is much more uniform now.
+
+![Unity_HxH38KT0B8](https://user-images.githubusercontent.com/23467551/137638954-c4888a5f-56b4-48a7-b386-1b9617d7330e.png)
+
+Main part of tutorial is done, just one last thing if you try to move or rotate the **RandUniformPointsInCircle** gameobject, circle move with it but the generated points do not respect it's transformations, this is because the points are generated in world space to fix this we need to convert them from world space to local space of the gameobject, this is easy just use **transform.TransformPoint** when visualizing them in **VizPoints**.
+
+```
+    private void VizPoints()
+    {
+        Handles.color = Color.red;
+        foreach (var pos in rupc.generatedPoints)
+            Handles.DrawSolidDisc(rupc.transform.TransformPoint(pos), rupc.transform.up, rupc.debugPointRadius);
+    }
+```
+
+Everything seems good now, tutorial is done, report any mistakes, provide feedback anything is welcome AND if you like it support me on patreon. 
