@@ -269,4 +269,4 @@ Main part of tutorial is done, just one last thing if you try to move or rotate 
     }
 ```
 
-Everything seems good now, tutorial is done, report any mistakes, provide feedback anything is welcome AND if you like it support me on patreon. 
+### _Everything seems good now, tutorial is done, report any mistakes, provide feedback anything is welcome AND if you like it support me on patreon._ 
