@@ -254,7 +254,7 @@ public class RandUniformPointsInCircleEd : UnityEditor.Editor
 
 ![Unity_HxH38KT0B8](https://user-images.githubusercontent.com/23467551/137638954-c4888a5f-56b4-48a7-b386-1b9617d7330e.png)
 
-Main part of tutorial is done, just one last thing if you try to move or rotate the **RandUniformPointsInCircle** gameobject, circle move with it but the generated points do not respect it's transformations, this is because the points are generated in world space to fix this we need to convert them from world space to local space of the gameobject, this is easy just use **transform.TransformPoint** when visualizing them in **VizPoints**.
+Main part of tutorial is done, just one last thing as with circle these current points are being generated in world space use **transform.TransformPoint** to convert them to local space.
 
 ```
     private void VizPoints()
