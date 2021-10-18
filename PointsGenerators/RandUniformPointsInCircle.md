@@ -191,16 +191,15 @@ public class RandUniformPointsInCircleEd : UnityEditor.Editor
 
 ![Unity_nJS3Lq6AW2](https://user-images.githubusercontent.com/23467551/137636170-db2cabfd-05fe-4946-b6cc-1ba3e191ea56.png)
 
-And depending on the requirements this may or may not be what you want, the reason points are generated more dense near the origin is uniform distribution of points across the entire area of circle, as distance from origin increases the area of circular segments increases with it, twice as many points are needed to fill the larger areas, in other words the density of points is inversely propertional to area mathematically 
+And depending on the requirements this may or may not be what you want, the reason points are generated more dense near the origin is uniform or constant probability of distribution of points across the entire area of circle, as distance from origin increases the area of circle increases with it, twice as many points are needed to fill the larger areas, in other words the density of points is inversely propertional to area mathematically 
 
 <img src="https://latex.codecogs.com/gif.latex?f(x)&space;=&space;1/2\pi\&space;where\&space;2\pi\&space;is\&space;the\&space;area\&space;of\&space;circle\" title="f(x) = 1/2\pi\ where\ 2\pi\ is\ the\ area\ of\ circle\" />
 
-A graph of our current algorithm would look like this, as we move from 0 to 1 on x, for every value on x same probability is given on y. 
+A graph of uniform probability of distribution, as we move from 0 to 1 on x, for every value on x same probability is taken for corresponding value of y for example when x = 0.25, y = 0.25 as well.
 
 ![desmos-graph](https://user-images.githubusercontent.com/23467551/137637391-f00cd386-3349-4534-bd34-54ee5d4b0042.png)
 
-However to compensate for loss of desnity as distance from origin increases more probability should be given to larger areas, to do this we can utilize some builtin methods such as **power** or **square root**.   
-So if we choose a function **y=pow(x^1/2)** the graph would like this.
+To compensate for loss of density as distance from origin increases more probability should be given to larger areas, to do this we can utilize some builtin methods such as **power** or **square root**, so if we choose a function **y=pow(x^1/2)** then when x = 0.25, y = 0.5 meaning probabilty on y is twice of x, plotting a graph again would look like this.
 
 ![desmos-graph (1)](https://user-images.githubusercontent.com/23467551/137638437-eddb997e-922b-42c1-921b-adba7e29d3e6.png)
 
