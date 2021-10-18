@@ -1,20 +1,24 @@
-### This tutorial is made for UnityNerds Patreon page.
+### This tutorial is made for CodeCreatePlay Patreon page.
 
+Suppose you want to spawn enemies around your player in a fixed circular radius or you want to create a brush tool to paint gameobjects in your level without enemies or gameobjects clustering in any specific area then in this tutorial you can learn how to do it.
 
-To generate points inside a circle , let us first visualize a circle, we are going to do this is UnityEditor mode.
+First visualize a circle, we are going to do this is UnityEditor mode.
  - create a new C# script **RandUniformPointsInCircle.cs**, and attach it to a **GameObject**.
- - open **RandUniformPointsInCircle.cs**, add 2 new floats **radius** and **segments**
+ - a circle is defined by two variables **origin** and **radius**, for origin we can use the pivot position of our gameobject and radius can be customizable, open **RandUniformPointsInCircle.cs**, add 2 new floats **circleRadius** and **segments**.
 
 ```
 public class RandUniformPointsInCircle : MonoBehaviour
 {
     // public 
     public float circleRadius = 1f;
+    
+    // this is just for visuals, a complete circle is 360 degrees however 
+    // we can change that when visualizing, the less the segments the more circle will appear jagged.
     public float segments = 30f;
 }
 ```
 
-- create a new folder **Editor** and in it create a new editor script **RandUniformPointsInCircleEd.cs** for **RandUniformPointsInCircle** c;lass.
+- create a new folder **Editor** and in it create a new editor script **RandUniformPointsInCircleEd.cs** for **RandUniformPointsInCircle**.
 - open the **RandUniformPointsInCircleEd.cs** script & create a new method **DrawCircle** and call it from **OnSceneGUI** method.
 
 ```
@@ -44,11 +48,11 @@ public class RandUniformPointsInCircleEd : UnityEditor.Editor
 }
 ```
 
-- The **X** and **Y**  positions from origin. on the circumference of a unit circle meaning circle with radius 1, are given by **X-position** = cos (angle) and **Y-position** = sin(angle), to scale a unity circle multiply these positions with our custom radius, **X-position** = cos (angle) * radius and **Y-position** = sin (angle) * radius.
+- The **X** and **Y**  positions from origin on the circumference of a unit circle meaning circle with radius 1, are given by **X-position** = cos (angle) and **Y-position** = sin(angle), to scale a unit circle multiply these positions with our custom radius, **X-position** = cos (angle) * radius and **Y-position** = sin (angle) * radius.
 
 ![circle_illustration](https://user-images.githubusercontent.com/23467551/135723961-eaa98723-320b-4c7b-b1d2-5d92196c002a.png)
 
-- To draw the circle we will loop through **n** number of times where **n = number of segments +1** and increment **angle** by an **angle** step (meaning offset between two successive angles based on number of segments).    
+- To draw the circle we will loop through **n** number of times where **n = number of segments +1** and increment **angle** by an **angle step** (meaning offset between two successive angles).    
 We will use [Handles](https://docs.unity3d.com/ScriptReference/Handles.html) to draw a line from last position to current position on circumference of the circle.
 
 ```
@@ -58,7 +62,7 @@ We will use [Handles](https://docs.unity3d.com/ScriptReference/Handles.html) to 
         Vector3 lastpoint = new Vector3();
         float currentAngle = 0;
 
-        float angleSetep = (360 / rupc.segments);
+        float angleStep = (360 / rupc.segments);
 
         Handles.color = Color.green;
 
@@ -73,7 +77,7 @@ We will use [Handles](https://docs.unity3d.com/ScriptReference/Handles.html) to 
                 Mathf.Cos(Mathf.PI / 180 * currentAngle) * rupc.circleRadius
                 );
 
-            currentAngle += angleSetep;
+            currentAngle += angleStep;
 
             if (i > 0)
                 Handles.DrawLine(lastpoint, currentPosition);
@@ -85,7 +89,7 @@ We will use [Handles](https://docs.unity3d.com/ScriptReference/Handles.html) to 
 
 ![01](https://user-images.githubusercontent.com/23467551/135799307-879e1583-24cd-4527-beb4-6ea0e5a185df.gif)
 
-- Now we have a circle but it does not respect the transforms of the **RandUniformPointsInCircle** gameObject, this is because points generated are in world space, let's fix this by converting them from world to local space of **RandUniformPointsInCircle** gameObject using [tranform.TransformPoint](https://docs.unity3d.com/ScriptReference/Transform.TransformPoint.html) utility method of unity's Transform component.
+- Now we have a circle at the origin and with the specified radius, but right now if you move, rotate or scale **RandUniformPointsInCircle** gameObject the circle does not repsects it's transformation, this is because circle is in world space, let's fix this by converting them from world to local space of **RandUniformPointsInCircle** gameObject using [tranform.TransformPoint](https://docs.unity3d.com/ScriptReference/Transform.TransformPoint.html) utility method of unity's transform component.
 
 ```
     private void DrawCircle()
@@ -94,7 +98,7 @@ We will use [Handles](https://docs.unity3d.com/ScriptReference/Handles.html) to 
         Vector3 lastpoint = new Vector3();
         float currentAngle = 0;
 
-        float angleSetep = (360 / rupc.segments);
+        float angleStep = (360 / rupc.segments);
 
         Handles.color = Color.green;
 
@@ -112,7 +116,7 @@ We will use [Handles](https://docs.unity3d.com/ScriptReference/Handles.html) to 
             // -------------CONVERT FROM WORLD SPACE TO LOCAL SPACE
             currentPosition = rupc.transform.TransformPoint(currentPosition);
 
-            currentAngle += angleSetep;
+            currentAngle += angleStep;
 
             if (i > 0)
                 Handles.DrawLine(lastpoint, currentPosition);
@@ -124,7 +128,7 @@ We will use [Handles](https://docs.unity3d.com/ScriptReference/Handles.html) to 
 
 ![02](https://user-images.githubusercontent.com/23467551/135799583-beb123ab-6da9-455b-b419-bed195f65e3a.gif)
 
-- We have a circle now, let's get back to original problem.. we have a circle and we want to generate some points in it that are more or less evenly spaced, a naive approach would be a choose two instances of random number generators one in range [0, 1] to select a random distance in a unit circle and another in range [0, 2π] to set angular position, so to do it in code create a new method **GenerateRandom** in **RandUniformPointsInCircle**. 
+- We have a circle now, let's get back to original problem... we have a circle and we want to generate some points in it that are more or less evenly spaced, a naive approach would be a choose two instances of random number generators one in range [0, 1] to select a random distance in a unit circle and another in range [0, 2π] (2π = one complete rotation of circle is radians) to set angular position, to do it in code create a new method **GenerateRandom** in **RandUniformPointsInCircle**. 
 
 ```
     /// <summary>
@@ -139,9 +143,9 @@ We will use [Handles](https://docs.unity3d.com/ScriptReference/Handles.html) to 
 
         for (int i = 0; i < count; i++)
         {
-            float theta = 2 * Mathf.PI * UnityEngine.Random.Range(0f, 1f); 
-            float r = radius * UnityEngine.Random.Range(0f, 1f);
-            Vector3 pos = new Vector3(r * Mathf.Cos(theta), 0, r * Mathf.Sin(theta));
+            float theta = 2 * Mathf.PI * UnityEngine.Random.Range(0f, 1f); // angular position.
+            float r = radius * UnityEngine.Random.Range(0f, 1f); // distance on circle.
+            Vector3 pos = new Vector3(r * Mathf.Cos(theta), 0, r * Mathf.Sin(theta)); // convert to cartesian coordinates.
             generatedPoints.Add(pos);
         }
 
@@ -150,20 +154,12 @@ We will use [Handles](https://docs.unity3d.com/ScriptReference/Handles.html) to 
     }
 ```
 
-- To call this method I have created a button in **OnInspectorGUI** of **RandUniformPointsInCircleEd** and to visualize the generated points create a new method **VisPoints** and call it from **OnSceneGUI**. The updated code for **RandUniformPointsInCircleEd** is shown.
+- To call this method I have created a button in **OnInspectorGUI** of **RandUniformPointsInCircleEd** and to visualize the generated points create a new method **VizPoints** and call it from **OnSceneGUI**.
 
 ```
 [CustomEditor(typeof(RandUniformPointsInCircle))]
 public class RandUniformPointsInCircleEd : UnityEditor.Editor
 {
-    // private
-    RandUniformPointsInCircle rupc = null;
-
-    private void OnEnable()
-    {
-        rupc = target as RandUniformPointsInCircle;
-    }
-
     public override void OnInspectorGUI()
     {
         base.OnInspectorGUI();
@@ -208,7 +204,7 @@ So if we choose a function **y=pow(x^1/2)** the graph would like this.
 
 ![desmos-graph (1)](https://user-images.githubusercontent.com/23467551/137638437-eddb997e-922b-42c1-921b-adba7e29d3e6.png)
 
-- To do this code, create a new method **GenerateUniform** in **RandUniformPointsInCircle**.
+- Create a new method **GenerateUniform** in **RandUniformPointsInCircle**.
 
 ```
     /// <summary>
