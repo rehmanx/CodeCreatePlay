@@ -203,7 +203,7 @@ To compensate for loss of density as distance from origin increases more probabi
 
 ![desmos-graph (1)](https://user-images.githubusercontent.com/23467551/137638437-eddb997e-922b-42c1-921b-adba7e29d3e6.png)
 
-- Create a new method **GenerateUniform** in **RandUniformPointsInCircle**.
+- To do this in code create a new method **GenerateUniform** in **RandUniformPointsInCircle**.
 
 ```
     /// <summary>
