@@ -1,5 +1,7 @@
 ### This tutorial is made for CodeCreatePlay Patreon page.
 
+![jFRbrSPEfr](https://user-images.githubusercontent.com/23467551/137761980-7d7c55b0-1df4-49ca-885b-c17b3deed887.gif)
+
 Suppose you want to spawn enemies around your player in a fixed circular radius or you want to create a brush tool to paint gameobjects in your level without enemies or gameobjects clustering in any specific area then in this tutorial you can learn how to do it.
 
 First visualize a circle, we are going to do this is UnityEditor mode.
