@@ -1,2 +1,2 @@
-# Unity-Nerds
-Repository for all unity tutorials available through UnityNerds patreon page.
+### CodeCreatePlay
+Repository for all unity tutorials available through **CodeCreatePlay** patreon page.
