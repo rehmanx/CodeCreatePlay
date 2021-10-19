@@ -117,7 +117,7 @@ Now we have the distributions of φ and θ let's do this in code.
 
 If you are curious about value of **r** and power function, then take a look at circle tutorial I mentioned before and that's just it uniformly distributed points inside a unit sphere.
 
-![uniform distribution](https://user-images.githubusercontent.com/23467551/137184231-bee0badd-241d-4f16-8000-5d4f4c383544.gif)
+![bTSKARi1QG](https://user-images.githubusercontent.com/23467551/137982118-5abb40e5-262b-4301-ab91-43a818ca3c0b.gif)
 
 - currently these generated points are generated at origin in world space, if you want them to respect the transforms of the gameobject you attached the RandUniformPointsInSphere.cs script, then convert them to local space of gameobject using transform.TransformPoint utility method. 
 
