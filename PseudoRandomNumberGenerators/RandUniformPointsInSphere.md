@@ -1,6 +1,6 @@
 ### This tutorial is made for [CodeCreatePlay](https://www.patreon.com/CodeCreatePlay).
 
-Among multiple methods for distributing points in a sphere, the one we will be using involves **[Spherical polar coordinates](https://mathinsight.org/spherical_coordinates#:~:text=Spherical%20coordinates%20determine%20the%20position,angle%20%CE%B8%20from%20polar%20coordinates.)** in which location of a point is determined based on **distance ρ or r from origin and two angles θ (theta) and φ (phi).**
+Among multiple methods for distributing points in a sphere, the one we will be using involves **[Spherical polar coordinates](https://mathinsight.org/spherical_coordinates#:~:text=Spherical%20coordinates%20determine%20the%20position,angle%20%CE%B8%20from%20polar%20coordinates.)** in which location of a point in 3d space is determined based on **distance ρ or r from origin and two angles θ (theta) and φ (phi)**, before we proceed take a look at **[uniformly distributing points in a circle tutorial](https://github.com/rehmanx/CodeCreatePlay/blob/main/PseudoRandomNumberGenerators/RandUniformPointsInCircle.md).**
 
 ![spherical_coordinates](https://user-images.githubusercontent.com/23467551/136846587-7ae62649-6762-41f8-9e08-b4eee38e9971.png)
 
@@ -82,7 +82,7 @@ So for example if you cast a die
 For the sake of the moment let's invert the graph of CDF.   
 Noticed any similarity ? this is almost the distribution we used when uniformly distributing points in a circle and this is what we need for sphere as well, but first we need distributions of θ and φ for the area of sphere, the joint distribution of θ and φ can be written as   
 
-<img src="https://latex.codecogs.com/gif.latex?\begin{aligned}&space;f(\theta,&space;\phi&space;)&space;=&space;sin\theta/4\pi\&space;where\&space;r&space;=&space;1\&space;and\&space;sin\theta\&space;is\&space;the\&space;J\&space;of\&space;transformation.&space;\end{aligned}" title="\begin{aligned} f(\theta, \phi ) = sin\theta/4\pi\ where\ r = 1\ and\ sin\theta\ is\ the\ J\ of\ transformation. \end{aligned}" />
+<img src="https://latex.codecogs.com/svg.image?f(\theta,&space;\phi,&space;r)&space;=&space;sin\theta/4\pi&space;r^{2}\&space;\&space;where\&space;r&space;=&space;1\&space;and\&space;sin\theta\&space;is\&space;jacobian\&space;of\&space;transformation" title="f(\theta, \phi, r) = sin\theta/4\pi r^{2}\ \ where\ r = 1\ and\ sin\theta\ is\ jacobian\ of\ transformation" />
 
 Distribution or PDF for θ by integrating w.r.t to φ ~ uniform[0, π].
 
@@ -134,6 +134,6 @@ If you are curious about value of **r** and power function, then take a look at 
     }
 ```
 
-The technique we used for uniformly distributing points is called **Inverse transform sampling**,
+The technique we used for uniformly distributing points is called **Inverse transform sampling**, but that's not the main topic here and more on it some other day.
 
 ### _Everything seems good now, tutorial is done, report any mistakes, provide feedback anything is welcome AND if you like it support me on [CodeCreatePlay](https://www.patreon.com/CodeCreatePlay)._ 
