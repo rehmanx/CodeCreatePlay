@@ -79,7 +79,15 @@ So for example if you cast a die
 - the PDF or the probability that you will get **_2_** is exactly 16.666%.
 - the CDF or the probability that you will get **_2_** is 33.333%, since there are two possible values i.e. 1 and 2.
 
-For the sake of the moment let's invert the graph of CDF.   
+![meta-chart](https://user-images.githubusercontent.com/23467551/138130697-505d9360-b78a-4690-9881-5c28c4044b98.png)
+
+![meta-chart (2)](https://user-images.githubusercontent.com/23467551/138132435-8165666c-b600-4118-8be8-cf122dd911e8.png)
+
+For the sake of the moment let's plot a graph for CDF and invert it.
+
+![Qe4u0](https://user-images.githubusercontent.com/23467551/138133497-99b3226b-b14d-498d-a132-41297a540246.png) 
+![UA2sT](https://user-images.githubusercontent.com/23467551/138133657-a7d7ef0b-96d7-4f19-b2fa-8a0041fc70e1.png)
+
 Noticed any similarity ? this is almost the distribution we used when uniformly distributing points in a circle and this is what we need for sphere as well, but first we need distributions of θ and φ for the area of sphere, the joint distribution of θ and φ can be written as   
 
 <img src="https://latex.codecogs.com/svg.image?f(\theta,&space;\phi,&space;r)&space;=&space;sin\theta/4\pi&space;r^{2}\&space;\&space;where\&space;r&space;=&space;1\&space;and\&space;sin\theta\&space;is\&space;jacobian\&space;of\&space;transformation" title="f(\theta, \phi, r) = sin\theta/4\pi r^{2}\ \ where\ r = 1\ and\ sin\theta\ is\ jacobian\ of\ transformation" />
