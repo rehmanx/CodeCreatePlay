@@ -10,7 +10,11 @@ Transformation from spherical to cartesian coordinates is given by
 **y = r.sinφ.sinθ**   
 **z = r.cosθ**   
 
-By selecting **ρ** in the range [0, 1] we can get a point that is inside the unit sphere., secondly by selecting θ in the range [0-2π], and φ in the range [0-π], we can get a direction, the code that generates this distribution in C# for unity engine in shown but this applies to any platform you are using.   
+In spherical coordinates to get position of any point 
+
+<img src="https://latex.codecogs.com/svg.image?r&space;\geq&space;0&space;\\0&space;\leq&space;\theta&space;<&space;2\pi&space;\\&space;0&space;\leq&space;\phi&space;\leq&space;\pi" title="r \geq 0 \\0 \leq \theta < 2\pi \\ 0 \leq \phi \leq \pi" />
+
+By selecting **ρ or r** in the range [0, 1] we can get a point that is inside the unit sphere., secondly by selecting θ in the range [0-2π], and φ in the range [0-π], we can get a direction, the code that generates this distribution in C# for unity engine in shown but this applies to any platform you are using.   
 I am using unity's **Gizmos** to visualize these points.
 
 ```
