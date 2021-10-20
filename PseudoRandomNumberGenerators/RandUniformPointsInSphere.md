@@ -80,8 +80,8 @@ In simple terms **PDF** is the probability that a random variable **X** will tak
 And **CDF** is the probability that a random variable **X** will take a value less then or equal to **x**.   
 So for example if you cast a die
 - the probability of obtaining **1, 2, 3, 4, 5, 6 is = 1/6 * 100 = 16.666%**.
-- the PDF or the probability that you will get **_2_** is exactly 16.666%.
-- the CDF or the probability that you will get **_2_** is 33.333%, since there are two possible values i.e. 1 and 2.
+- the PDF or the probability that you will get **2** is exactly 16.666%.
+- the CDF or the probability that you will get **2** is 33.333% since there are two possible values i.e. 1 and 2, similarly probability that you will get **6** is 100&.
 
 ![meta-chart](https://user-images.githubusercontent.com/23467551/138130697-505d9360-b78a-4690-9881-5c28c4044b98.png)
 
