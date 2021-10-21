@@ -1,107 +1,144 @@
-### This tutorial is made for [CodeCreatePlay](https://www.patreon.com/CodeCreatePlay).
+### This tutorial is made for UnityNerds Patreon page.   
 
-Suppose you have any kind of projectile motion like muzzle from a tank or an arrow, then you can predict it's position at time t and draw the projectile's path as a visual feedback for the player.
+**Welcome to part 1 of realistic character controller series, In this part we will add the ability to move our character seamlessly in the environment and jump download the demo environment for the tutorial here.**    
 
-When the projectile is launched it's initial data is given by
+- Open the start scene, they are a few things already set up for you including an environment and a player.
 
-<img src="https://latex.codecogs.com/svg.image?\begin{aligned}position&space;=&space;x_{0}&space;\\initial&space;velocity&space;=&space;v_{0}&space;\\acceleration\&space;due\&space;to\&space;gravity\&space;=&space;g&space;=&space;-9.8ms^{-2}&space;\\time&space;=&space;t&space;=&space;0&space;\end{aligned}&space;" title="\begin{aligned}position = x_{0} \\initial velocity = v_{0} \\acceleration\ due\ to\ gravity\ = g = -9.8ms^{-2} \\time = t = 0 \end{aligned} " />
+![static scene](https://user-images.githubusercontent.com/23467551/135841347-de48dcab-6b21-4ac8-b901-fe6bd31471af.png)
 
-We know that acceleration is rate of change of velocity overtime 
-
-<img src="https://latex.codecogs.com/svg.image?g&space;=&space;\Delta&space;v&space;/&space;\Delta&space;t&space;" title="g = \Delta v / \Delta t " />
-
- We can rearrange this equation for velocity, since this is a rate function to find velocity at any time t we will have to integrate it to find an individual instance of velocity so,
-
-<img src="https://latex.codecogs.com/svg.image?\begin{aligned}v(t)&space;=&space;\int&space;g\&space;dt&space;\\=&space;g&space;\int&space;dt\&space;\because&space;c\int&space;dt&space;=&space;\int&space;c\&space;dt\&space;where\&space;c\&space;=&space;constant\&space;of\&space;integral&space;\\=&space;gt&space;&plus;&space;c\&space;\because&space;\int&space;dt&space;=&space;t&space;&plus;&space;c&space;\\v(t)&space;=&space;gt&space;&plus;&space;v_{0}\&space;(velocity\&space;at\&space;any\&space;given\&space;instance)\end{aligned}" title="\begin{aligned}v(t) = \int g\ dt \\= g \int dt\ \because c\int dt = \int c\ dt\ where\ c\ = constant\ of\ integral \\= gt + c\ \because \int dt = t + c \\v(t) = gt + v_{0}\ (velocity\ at\ any\ given\ instance)\end{aligned}" />
-
-We now know velocity at any given instance we can use it to calculate position since
-
-<img src="https://latex.codecogs.com/svg.image?\begin{aligned}v&space;=&space;\Delta&space;x&space;/&space;\Delta&space;t\&space;where\&space;v\&space;is\&space;average\&space;velocity\end{aligned}" title="\begin{aligned}v = \Delta x / \Delta t\ where\ v\ is\ average\ velocity\end{aligned}" />
-
-rearranging this equation for time becomes
-
-<img src="https://latex.codecogs.com/svg.image?\begin{aligned}\Delta&space;x&space;=&space;v\Delta&space;t\end{aligned}" title="\begin{aligned}\Delta x = v\Delta t\end{aligned}" />
-
-integrating to find individual instances of positions
-
-<img src="https://latex.codecogs.com/svg.image?\begin{aligned}x(t)&space;=&space;\int&space;v\&space;dt&space;\\=&space;putting\&space;value\&space;of\&space;v&space;\\=&space;\int&space;gt&space;&plus;&space;v_{0}\&space;dt&space;\\(taking\&space;constants\&space;out)&space;\\=&space;g&space;\int&space;t\&space;dt\&space;&plus;\&space;v_{0}&space;\int&space;dt\&space;&space;\\=&space;g(1/2t^{2})&space;&plus;&space;v_{0}t&space;&plus;&space;c\&space;\because&space;\int&space;t^{n}\&space;dt&space;=&space;\frac{1}{n&plus;1}t^{n&plus;1}&space;&plus;&space;c&space;\\x(t)&space;=&space;gt^{2}/2&space;&plus;&space;v_{0}t&space;&plus;&space;x_{0}\&space;(position\&space;at\&space;any\&space;given\&space;instance)\end{aligned}" title="\begin{aligned}x(t) = \int v\ dt \\= putting\ value\ of\ v \\= \int gt + v_{0}\ dt \\(taking\ constants\ out) \\= g \int t\ dt\ +\ v_{0} \int dt\ \\= g(1/2t^{2}) + v_{0}t + c\ \because \int t^{n}\ dt = \frac{1}{n+1}t^{n+1} + c \\x(t) = gt^{2}/2 + v_{0}t + x_{0}\ (position\ at\ any\ given\ instance)\end{aligned}" />
-
-so we have the position at any given instance, you can also verify the above equation for position at an instance t by putting t = 0 and solving, result would be initial position which is accurate since at time t = 0 we have not moved at all, now let's do this in code.   
-
-Create a new empty unity scene, create a new empty gameObject rename it as you like, create a new C# script rename it **PredictingProjectile** and open it up in visual studio.    
-
-We will create some public fields to represent initial data (data of projectile just before it's launch). 
+- Create a new script **CharacterMototr.cs** and attach it to **Player** gameObject.
+- To organize various fields / variables of different categories like movement or physics settings, we will divide them into classes, Open **CharacterMotor.cs** and create a nested class **MovementSettings** add **[System.Serializable]** attribute otherwise fields of this class will not show up in inspector, now add 3 float fields in it **walkSpeed, runSpeed & turnSpeed**, finally create an instance of **MovementSettings**.
 
 ```
-public class PredictingProjectile : MonoBehaviour
-{
-    // public                                   
-    public float speed = 10f;                   // initial speed
-    public Vector3 initialVel = Vector3.zero;   // initial velocity
-    public float timeInterval = 1f;             // difference between two successive time intervals
-    public float numTimes = 25f;                   // total number of times to run simulation for
-    public float gravity = 9.8f;                // gravity
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
 
-    // private.
-    Vector3 initialPos = Vector3.zero;          // start position of projectile
+
+public class CharacterMotor : MonoBehaviour
+{
+    [System.Serializable]
+    public class MovementSettings
+    {
+        public float walkSpeed = 1.7f;
+        public float runSpeed = 5.0f;
+        public float turnSpeed = 2f;
+    }
+
+    // class instances
+    public MovementSettings movementSettings = new MovementSettings();
+
+    void Start()
+    {
+    }
+
+    void Update()
+    {
+    }
 }
 ```
 
-Now let's implement the equation we solved for calculating position at any tile t, this is straight forward and easy to understand. 
+![01](https://user-images.githubusercontent.com/23467551/135844076-4fb07d84-4d9d-4bfa-8835-e43be80da2bf.png)
+
+- We have got a basics setup, let's move our character, moving our character involves changing it's position and to change position we are going to give it a velocity. Velocity is defined as rate of change of position over time, if we represent velocity by **v** then  
+
+<img src="https://latex.codecogs.com/gif.latex?\begin{aligned}&space;v&space;=&space;\Delta&space;s&space;/&space;\Delta&space;t&space;\\&space;here\&space;\Delta&space;s&space;=&space;change\&space;in\&space;position\&space;and\&space;\Delta&space;t&space;=&space;chnage\&space;in\&space;time&space;\\&space;rearranging\&space;for\&space;position&space;\\&space;\Delta&space;s&space;=&space;v&space;*&space;\Delta&space;t&space;\end{aligned}" title="\begin{aligned} v = \Delta s / \Delta t \\ here\ \Delta s = change\ in\ position\ and\ \Delta t = chnage\ in\ time \\ rearranging\ for\ position \\ \Delta s = v * \Delta t \end{aligned}" />   
+
+- Create a new Vector3 field velocity and add a new method **Move**, call it in **Update** method.
 
 ```
-    /// <summary>
-    /// Calculates and returns position of projectile at time t.
-    /// </summary>
-    /// <param name="t" time></param>
-    /// <param name="v0" initial velocity></param>
-    /// <param name="x0" initial position></param>
-    /// <param name="g" acceleration></param>
-    /// <returns></returns>
-    Vector3 PredictProjectilePos(float t, Vector3 v0, Vector3 x0, Vector3 g)
+    // private
+    private Vector3 velocity = Vector3.zero;
+
+    void Update()
     {
-        return g * (0.5f * t * t) + v0 * t + x0;
+        Move();
+    }
+
+    void Move()
+    {
+        // move our character is direction of force.
+        transform.position += velocity * Time.deltaTime;
     }
 ```
 
-If time t changes from 0 to n we can calculate positions at **t = n** and at **t = n+1** and draw a line between them, doing this from t = 0 to t = n we can draw the trajectory or the path of the projectile. We will do this using unity's **OnDrawGizmos** method, see comments in code if anything is not easily understood.
+- Recall from high school physics velocity is a vector quantity it has both a direction and magnitude (speed), by default our velocity vector is a null vector meaning all axis **X, Y, Z** are **0**, a null vector has no magnitude or direction, giving this velocity to our character will have no effect.
+Let's fix this, first let's give this velocity vector a  direction, we will do this from user input, so create a new method **GetInput**.
 
 ```
-    private void OnDrawGizmos()
+    void Update()
     {
-        initialPos = transform.position;
+        GetInput();
+        Move();
+    }
 
-        // visualize initial position of projectile by drawing a sphere
-        Gizmos.color = Color.green;
-        Gizmos.DrawSphere(initialPos, 0.1f);
-
-        for (int t = 0; t < numTimes; t++)
-        {
-            // first get the two time intervals i.e. t = n and t = n+1 
-            float time_0 = t * timeInterval * Time.deltaTime;
-            float time_1 = (t + 1) * timeInterval * Time.deltaTime;
-            
-             // now to calculate positions at both times
-
-            // we are normalizing initialVelocity vector to set a direction first and then multiplying with speed to 
-            // give a speed in that direction.
-
-            Vector3 pos_1 = PredictProjectilePos(time_0, initialVelocity.normalized * speed, initialPos, Vector3.down * gravity);
-            Vector3 pos_2 = PredictProjectilePos(time_1, initialVelocity.normalized * speed, initialPos, Vector3.down * gravity);
-
-            // draw a line between both positions 
-            Gizmos.color = Color.red;
-            Gizmos.DrawLine(pos_1, pos_2);
-        }
+    void GetInput()
+    {
     }
 ```
 
-I have set the initial data for my projectile as follows
+- Now we have a direction to move from user input, let's give it a speed, the speed variable by default is 0, to give it a value, we will use values of **walkSpeed or runSpeed** from **MovementSettings**, first let's just do the walk and set speed = movementSettings.walkSpeed. Update the code in **Move** method.
 
-![Unity_SP3lTRIxYC](https://user-images.githubusercontent.com/23467551/138330051-e7a16bd7-302b-40ee-ab09-eddc7dcb8262.png)
+```
+    void Move()
+    {
+        speed = movementSettings.walkSpeed;
 
-and here is the predicted path
+        // move our character is direction of force.
+        transform.position += speed * direction * Time.deltaTime;
+    }
+```
 
-![Unity_0CiJsxVXog](https://user-images.githubusercontent.com/23467551/138330178-363c87dc-648c-4701-bfcd-a71e29fdc399.png)
+- Enter play mode and test the character it will move in world space based on direction from user input.
 
-### Everything seems good now, tutorial is done, report any mistakes, provide feedback anything is welcome AND if you like it support me on [CodeCreatePlay](https://www.patreon.com/CodeCreatePlay).
+![basic move](https://user-images.githubusercontent.com/23467551/135877714-a8db810d-2363-41e5-964f-d9e307ead396.gif)
+
+- Now let's give our character ability to turn or rotate. We will do that by changing the heading (**the forward axis, in case of unity it is z-axis**) of our character, heading can be changed by rotating around Y-axis or the up-axis of our character i.e. [tranform.up](https://docs.unity3d.com/ScriptReference/Transform-up.html).
+Unity internally stores rotations as [Quaternion ](https://docs.unity3d.com/ScriptReference/Quaternion.html), to create a rotation around local up-axis i.e. tranform.up we will use [Quaternion.AngleAxis](https://docs.unity3d.com/ScriptReference/Quaternion.AngleAxis.html).    
+First let's add a new variable **targetRotation** of type [Quaternion](https://docs.unity3d.com/ScriptReference/Quaternion.html), set it's value to current rotation of our character in **Start** method, create a new method **Rotate** and call it from **Update** method.   
+- 
+
+```
+    void Start()
+    {
+        targetRotation = transform.rotation;
+    }
+
+    void Update()
+    {
+        GetInput();
+        Move();
+        Rotate();
+    }
+
+    void Rotate()
+    {
+        targetRotation *= Quaternion.AngleAxis(Input.GetAxisRaw("Mouse X") * movementSettings.turnSpeed * Time.deltaTime, transform.up);
+        transform.rotation = targetRotation;
+    }
+```
+
+![worldMove](https://user-images.githubusercontent.com/23467551/135892745-d18e7e2d-1900-42bf-9e70-5b250a5f4546.gif)
+
+- We can now change our heading, but there is a problem the character is not moving in direction it is facing. This is due to the fact that we are moving in world space, while rotation is in local axis. Let's fix this by changing our direction of movement from world to local space using the utility function [transform.transformDirection](https://docs.unity3d.com/ScriptReference/Transform.TransformDirection.html).
+Update the code in **Move** method.
+
+```
+    void Move()
+    {
+        speed = movementSettings.walkSpeed;
+        direction *= speed;
+
+        // convert direction from world to local space
+        direction = transform.TransformDirection(direction);
+
+        // move our character is direction of force.
+        transform.position += speed * direction * Time.deltaTime;
+    }
+```
+
+![local move](https://user-images.githubusercontent.com/23467551/135894461-f2eddcda-1828-4ac0-a392-340dada5bf5e.gif)
+
+- Enter play mode the character now moves as expected.
+- That's it for this part, and if you want you can add more features to it for example make character only change heading when he is moving or set the speed of character to **movementSettings.runSpeed** as long as **shift** key is down, but that is up to you.    
+-  In next part we will add collision detection.
