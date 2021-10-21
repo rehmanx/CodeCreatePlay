@@ -1,269 +1,107 @@
-### This tutorial is made for [CodeCreatePlay](https://www.patreon.com/CodeCreatePlay) Patreon page.
+### This tutorial is made for [CodeCreatePlay](https://www.patreon.com/CodeCreatePlay).
 
-![jFRbrSPEfr](https://user-images.githubusercontent.com/23467551/137761980-7d7c55b0-1df4-49ca-885b-c17b3deed887.gif)
+Suppose you have any kind of projectile motion like muzzle from a tank or an arrow, then you can predict it's position at time t and draw the projectile's path as a visual feedback for the player.
 
-Suppose you want to spawn enemies around your player in a fixed circular radius or you want to create a brush tool to paint gameobjects in your level without enemies or gameobjects clustering in any specific area then in this tutorial you will learn how to do it.
+When the projectile is launched it's initial data is given by
 
-First visualize a circle, we are going to do this is UnityEditor mode.
- - create a new C# script **RandUniformPointsInCircle.cs**, and attach it to a **GameObject**.
- - a circle is defined by two variables **origin** and **radius**, for origin we can use the pivot position of our gameobject and radius can be customizable, open **RandUniformPointsInCircle.cs**, add 2 new floats **circleRadius** and **segments**.
+<img src="https://latex.codecogs.com/svg.image?\begin{aligned}position&space;=&space;x_{0}&space;\\initial&space;velocity&space;=&space;v_{0}&space;\\acceleration\&space;due\&space;to\&space;gravity\&space;=&space;g&space;=&space;-9.8ms^{-2}&space;\\time&space;=&space;t&space;=&space;0&space;\end{aligned}&space;" title="\begin{aligned}position = x_{0} \\initial velocity = v_{0} \\acceleration\ due\ to\ gravity\ = g = -9.8ms^{-2} \\time = t = 0 \end{aligned} " />
+
+We know that acceleration is rate of change of velocity overtime 
+
+<img src="https://latex.codecogs.com/svg.image?g&space;=&space;\Delta&space;v&space;/&space;\Delta&space;t&space;" title="g = \Delta v / \Delta t " />
+
+ We can rearrange this equation for velocity, since this is a rate function to find velocity at any time t we will have to integrate it to find an individual instance of velocity so,
+
+<img src="https://latex.codecogs.com/svg.image?\begin{aligned}v(t)&space;=&space;\int&space;g\&space;dt&space;\\=&space;g&space;\int&space;dt\&space;\because&space;c\int&space;dt&space;=&space;\int&space;c\&space;dt\&space;where\&space;c\&space;=&space;constant\&space;of\&space;integral&space;\\=&space;gt&space;&plus;&space;c\&space;\because&space;\int&space;dt&space;=&space;t&space;&plus;&space;c&space;\\v(t)&space;=&space;gt&space;&plus;&space;v_{0}\&space;(velocity\&space;at\&space;any\&space;given\&space;instance)\end{aligned}" title="\begin{aligned}v(t) = \int g\ dt \\= g \int dt\ \because c\int dt = \int c\ dt\ where\ c\ = constant\ of\ integral \\= gt + c\ \because \int dt = t + c \\v(t) = gt + v_{0}\ (velocity\ at\ any\ given\ instance)\end{aligned}" />
+
+We now know velocity at any given instance we can use it to calculate position since
+
+<img src="https://latex.codecogs.com/svg.image?\begin{aligned}v&space;=&space;\Delta&space;x&space;/&space;\Delta&space;t\&space;where\&space;v\&space;is\&space;average\&space;velocity\end{aligned}" title="\begin{aligned}v = \Delta x / \Delta t\ where\ v\ is\ average\ velocity\end{aligned}" />
+
+rearranging this equation for time becomes
+
+<img src="https://latex.codecogs.com/svg.image?\begin{aligned}\Delta&space;x&space;=&space;v\Delta&space;t\end{aligned}" title="\begin{aligned}\Delta x = v\Delta t\end{aligned}" />
+
+integrating to find individual instances of positions
+
+<img src="https://latex.codecogs.com/svg.image?\begin{aligned}x(t)&space;=&space;\int&space;v\&space;dt&space;\\=&space;putting\&space;value\&space;of\&space;v&space;\\=&space;\int&space;gt&space;&plus;&space;v_{0}\&space;dt&space;\\(taking\&space;constants\&space;out)&space;\\=&space;g&space;\int&space;t\&space;dt\&space;&plus;\&space;v_{0}&space;\int&space;dt\&space;&space;\\=&space;g(1/2t^{2})&space;&plus;&space;v_{0}t&space;&plus;&space;c\&space;\because&space;\int&space;t^{n}\&space;dt&space;=&space;\frac{1}{n&plus;1}t^{n&plus;1}&space;&plus;&space;c&space;\\x(t)&space;=&space;gt^{2}/2&space;&plus;&space;v_{0}t&space;&plus;&space;x_{0}\&space;(position\&space;at\&space;any\&space;given\&space;instance)\end{aligned}" title="\begin{aligned}x(t) = \int v\ dt \\= putting\ value\ of\ v \\= \int gt + v_{0}\ dt \\(taking\ constants\ out) \\= g \int t\ dt\ +\ v_{0} \int dt\ \\= g(1/2t^{2}) + v_{0}t + c\ \because \int t^{n}\ dt = \frac{1}{n+1}t^{n+1} + c \\x(t) = gt^{2}/2 + v_{0}t + x_{0}\ (position\ at\ any\ given\ instance)\end{aligned}" />
+
+so we have the position at any given instance, you can also verify the above equation for position at an instance t by putting t = 0 and solving, result would be initial position which is accurate since at time t = 0 we have not moved at all, now let's do this in code.   
+
+Create a new empty unity scene, create a new empty gameObject rename it as you like, create a new C# script rename it **PredictingProjectile** and open it up in visual studio.    
+
+We will create some public fields to represent initial data (data of projectile just before it's launch). 
 
 ```
-public class RandUniformPointsInCircle : MonoBehaviour
+public class PredictingProjectile : MonoBehaviour
 {
-    // public 
-    public float circleRadius = 1f;
-    
-    // this is just for visuals, a complete circle is 360 degrees however 
-    // we can change that when visualizing, the less the segments the more circle will appear jagged.
-    public float segments = 30f;
+    // public                                   
+    public float speed = 10f;                   // initial speed
+    public Vector3 initialVel = Vector3.zero;   // initial velocity
+    public float timeInterval = 1f;             // difference between two successive time intervals
+    public float numTimes = 25f;                   // total number of times to run simulation for
+    public float gravity = 9.8f;                // gravity
+
+    // private.
+    Vector3 initialPos = Vector3.zero;          // start position of projectile
 }
 ```
 
-- create a new folder **Editor** and in it create a new editor script **RandUniformPointsInCircleEd.cs** for **RandUniformPointsInCircle**.
-- open the **RandUniformPointsInCircleEd.cs** script & create a new method **DrawCircle** and call it from **OnSceneGUI** method.
-
-```
-using System;
-using UnityEditor;
-
-
-[CustomEditor(typeof(RandUniformPointsInCircle))]
-public class RandUniformPointsInCircleEd : UnityEditor.Editor
-{
-    // private
-    RandUniformPointsInCircle rupc = null;
-
-    private void OnEnable()
-    {
-        rupc = target as RandUniformPointsInCircle ;
-    }
-
-    private void OnSceneGUI()
-    {
-        DrawCircle();
-    }
-
-    private void DrawCircle()
-    {
-    }
-}
-```
-
-- The **X** and **Y**  positions from origin on the circumference of a unit circle meaning circle with radius 1, are given by **X-position** = cos (angle) and **Y-position** = sin(angle), to scale a unit circle multiply these positions with our custom radius, **X-position** = cos (angle) * radius and **Y-position** = sin (angle) * radius.
-
-![circle_illustration](https://user-images.githubusercontent.com/23467551/135723961-eaa98723-320b-4c7b-b1d2-5d92196c002a.png)
-
-- To draw the circle we will loop through **n** number of times where **n = number of segments +1** and increment **angle** by an **angle step** (meaning offset between two successive angles).    
-We will use [Handles](https://docs.unity3d.com/ScriptReference/Handles.html) to draw a line from last position to current position on circumference of the circle.
-
-```
-    private void DrawCircle()
-    {
-        Vector3 currentPosition = new Vector3();
-        Vector3 lastpoint = new Vector3();
-        float currentAngle = 0;
-
-        float angleStep = (360 / rupc.segments);
-
-        Handles.color = Color.green;
-
-        for (int i = 0; i < rupc.segments + 1; i++)
-        {
-            // Mathf.Sin expects an angle in radians, however currentAngle is in degress, to convert degrees to radians
-            // multiply angle in degree with PI / 180.
-
-            currentPosition = new Vector3(
-                Mathf.Sin(Mathf.PI / 180 * currentAngle) * rupc.circleRadius,
-                0,
-                Mathf.Cos(Mathf.PI / 180 * currentAngle) * rupc.circleRadius
-                );
-
-            currentAngle += angleStep;
-
-            if (i > 0)
-                Handles.DrawLine(lastpoint, currentPosition);
-
-            lastpoint = currentPosition;
-        }
-    }
-```
-
-![01](https://user-images.githubusercontent.com/23467551/135799307-879e1583-24cd-4527-beb4-6ea0e5a185df.gif)
-
-- Now we have a circle at the origin and with the specified radius, but right now if you move, rotate or scale **RandUniformPointsInCircle** gameObject the circle does not repsects it's transformation, this is because circle is in world space, let's fix this by converting them from world to local space of **RandUniformPointsInCircle** gameObject using [tranform.TransformPoint](https://docs.unity3d.com/ScriptReference/Transform.TransformPoint.html) utility method of unity's transform component.
-
-```
-    private void DrawCircle()
-    {
-        Vector3 currentPosition = new Vector3();
-        Vector3 lastpoint = new Vector3();
-        float currentAngle = 0;
-
-        float angleStep = (360 / rupc.segments);
-
-        Handles.color = Color.green;
-
-        for (int i = 0; i < rupc.segments + 1; i++)
-        {
-            // Mathf.Sin expects an angle in radians, however currentAngle is in degress, to convert degrees to radians
-            // multiply angle in degree with PI / 180.
-
-            currentPosition = new Vector3(
-                Mathf.Sin(Mathf.PI / 180 * currentAngle) * rupc.circleRadius,
-                0,
-                Mathf.Cos(Mathf.PI / 180 * currentAngle) * rupc.circleRadius
-                );
-
-            // -------------CONVERT FROM WORLD SPACE TO LOCAL SPACE
-            currentPosition = rupc.transform.TransformPoint(currentPosition);
-
-            currentAngle += angleStep;
-
-            if (i > 0)
-                Handles.DrawLine(lastpoint, currentPosition);
-
-            lastpoint = currentPosition;
-        }
-    }
-```
-
-![02](https://user-images.githubusercontent.com/23467551/135799583-beb123ab-6da9-455b-b419-bed195f65e3a.gif)
-
-- We have a circle now, let's get back to original problem... we have a circle and we want to generate some points in it that are more or less evenly spaced, a naive approach would be a choose two instances of random number generators one in range [0, 1] to select a random distance in a unit circle and another in range [0, 2π] (2π = one complete rotation of circle is radians) to set angular position, to do it in code create a new method **GenerateRandom** in **RandUniformPointsInCircle**. 
+Now let's implement the equation we solved for calculating position at any tile t, this is straight forward and easy to understand. 
 
 ```
     /// <summary>
-    /// generates random points inside a circle of radius r.
+    /// Calculates and returns position of projectile at time t.
     /// </summary>
-    /// <param name="count"> number of points to generate </param>
-    /// <param name="radius"> radius of the circle </param>
+    /// <param name="t" time></param>
+    /// <param name="v0" initial velocity></param>
+    /// <param name="x0" initial position></param>
+    /// <param name="g" acceleration></param>
     /// <returns></returns>
-    public List<Vector3> GenerateRandom(int count, float radius)
+    Vector3 PredictProjectilePos(float t, Vector3 v0, Vector3 x0, Vector3 g)
     {
-        generatedPoints.Clear();
+        return g * (0.5f * t * t) + v0 * t + x0;
+    }
+```
 
-        for (int i = 0; i < count; i++)
+If time t changes from 0 to n we can calculate positions at **t = n** and at **t = n+1** and draw a line between them, doing this from t = 0 to t = n we can draw the trajectory or the path of the projectile. We will do this using unity's **OnDrawGizmos** method, see comments in code if anything is not easily understood.
+
+```
+    private void OnDrawGizmos()
+    {
+        initialPos = transform.position;
+
+        // visualize initial position of projectile by drawing a sphere
+        Gizmos.color = Color.green;
+        Gizmos.DrawSphere(initialPos, 0.1f);
+
+        for (int t = 0; t < numTimes; t++)
         {
-            float theta = 2 * Mathf.PI * UnityEngine.Random.Range(0f, 1f); // angular position.
-            float r = radius * UnityEngine.Random.Range(0f, 1f); // distance on circle.
-            Vector3 pos = new Vector3(r * Mathf.Cos(theta), 0, r * Mathf.Sin(theta)); // convert to cartesian coordinates.
-            generatedPoints.Add(pos);
-        }
+            // first get the two time intervals i.e. t = n and t = n+1 
+            float time_0 = t * timeInterval * Time.deltaTime;
+            float time_1 = (t + 1) * timeInterval * Time.deltaTime;
+            
+             // now to calculate positions at both times
 
-        Debug.LogFormat("generated {0} points", generatedPoints.Count);
-        return generatedPoints;
-    }
-```
+            // we are normalizing initialVelocity vector to set a direction first and then multiplying with speed to 
+            // give a speed in that direction.
 
-- To call this method I have created a button in **OnInspectorGUI** of **RandUniformPointsInCircleEd** and to visualize the generated points create a new method **VizPoints** and call it from **OnSceneGUI**.
+            Vector3 pos_1 = PredictProjectilePos(time_0, initialVelocity.normalized * speed, initialPos, Vector3.down * gravity);
+            Vector3 pos_2 = PredictProjectilePos(time_1, initialVelocity.normalized * speed, initialPos, Vector3.down * gravity);
 
-```
-[CustomEditor(typeof(RandUniformPointsInCircle))]
-public class RandUniformPointsInCircleEd : UnityEditor.Editor
-{
-    public override void OnInspectorGUI()
-    {
-        base.OnInspectorGUI();
-
-        // button to call GenerateRandom method in RandUniformPointsInCircle.
-        if(GUILayout.Button("GenerateRandom"))
-        {
-            rupc.GenerateRandom(1000, rupc.circleRadius);
-            SceneView.RepaintAll();
-        }
-    }
-
-    private void OnSceneGUI()
-    {
-        DrawCircle();
-        VizPoints();
-    }
-
-    private void VizPoints()
-    {
-        Handles.color = Color.red;
-        foreach (var pos in rupc.generatedPoints)
-            Handles.DrawSolidDisc(pos, rupc.transform.up, rupc.debugPointRadius);
-    }
-}
-```
-
-- The result looks something like this, with points clustered at the center.
-
-![Unity_nJS3Lq6AW2](https://user-images.githubusercontent.com/23467551/137636170-db2cabfd-05fe-4946-b6cc-1ba3e191ea56.png)
-
-And depending on the requirements this may or may not be what you want, the reason points are generated more dense near the origin is uniform or constant probability of distribution of points across the entire area of circle, as distance from origin increases the area of circle increases with it, twice as many points are needed to fill the larger areas, in other words the density of points is inversely propertional to area mathematically 
-
-<img src="https://latex.codecogs.com/gif.latex?f(x)&space;=&space;1/2\pi\&space;where\&space;2\pi\&space;is\&space;the\&space;area\&space;of\&space;circle\" title="f(x) = 1/2\pi\ where\ 2\pi\ is\ the\ area\ of\ circle\" />
-
-A graph of uniform probability of distribution, as we move from 0 to 1 on x, for every value on x same probability is taken for corresponding value of y for example when x = 0.25, y = 0.25 as well.
-
-![desmos-graph](https://user-images.githubusercontent.com/23467551/137637391-f00cd386-3349-4534-bd34-54ee5d4b0042.png)
-
-To compensate for loss of density as distance from origin increases more probability should be given to larger areas, to do this we can utilize some builtin methods such as **power** or **square root**, so if we choose a function **y=pow(x^1/2)** then when x = 0.25, y = 0.5 meaning probabilty on y is twice of x, plotting a graph again would look like this.
-
-![desmos-graph (1)](https://user-images.githubusercontent.com/23467551/137638437-eddb997e-922b-42c1-921b-adba7e29d3e6.png)
-
-- To do this in code create a new method **GenerateUniform** in **RandUniformPointsInCircle**.
-
-```
-    /// <summary>
-    /// uniformly generates random points inside a circle of radius r.
-    /// </summary>
-    /// <param name="count"> number of points to generate </param>
-    /// <param name="radius"> radius of the circle </param>
-    /// <returns></returns>
-    public List<Vector3> GenerateUniform(int count, float radius)
-    {
-        generatedPoints.Clear();
-
-        for (int i = 0; i < count; i++)
-        {
-            float theta = 2 * Mathf.PI * UnityEngine.Random.Range(0f, 1f);
-            var r = radius * Mathf.Pow(Random.Range(0f, 1f), 1 / 2f);
-            Vector3 pos = new Vector3(r * Mathf.Cos(theta), 0, r * Mathf.Sin(theta));
-            generatedPoints.Add(pos);
-        }
-
-        Debug.LogFormat("generated {0} points", generatedPoints.Count);
-        return generatedPoints;
-    }
-```
-
-and create a new button in **RandUniformPointsInCircleEd** to call this method.
-
-```
-[CustomEditor(typeof(RandUniformPointsInCircle))]
-public class RandUniformPointsInCircleEd : UnityEditor.Editor
-{
-    public override void OnInspectorGUI()
-    {
-        base.OnInspectorGUI();
-
-        // // button to call GenerateUniform method in RandUniformPointsInCircle.
-        if (GUILayout.Button("GenerateUniform"))
-        {
-            rupc.GenerateUniform(1000, rupc.circleRadius);
-            SceneView.RepaintAll();
+            // draw a line between both positions 
+            Gizmos.color = Color.red;
+            Gizmos.DrawLine(pos_1, pos_2);
         }
     }
-}
 ```
 
-- The result look something like this, distribution is much more uniform now.
+I have set the initial data for my projectile as follows
 
-![Unity_HxH38KT0B8](https://user-images.githubusercontent.com/23467551/137638954-c4888a5f-56b4-48a7-b386-1b9617d7330e.png)
+![Unity_SP3lTRIxYC](https://user-images.githubusercontent.com/23467551/138330051-e7a16bd7-302b-40ee-ab09-eddc7dcb8262.png)
 
-Main part of tutorial is done, just one last thing as with circle these current points are being generated in world space use **transform.TransformPoint** to convert them to local space.
+and here is the predicted path
 
-```
-    private void VizPoints()
-    {
-        Handles.color = Color.red;
-        foreach (var pos in rupc.generatedPoints)
-            Handles.DrawSolidDisc(rupc.transform.TransformPoint(pos), rupc.transform.up, rupc.debugPointRadius);
-    }
-```
+![Unity_0CiJsxVXog](https://user-images.githubusercontent.com/23467551/138330178-363c87dc-648c-4701-bfcd-a71e29fdc399.png)
 
-### _Everything seems good now, tutorial is done, report any mistakes, provide feedback anything is welcome AND if you like it support me on [CodeCreatePlay](https://www.patreon.com/CodeCreatePlay)._ 
+### Everything seems good now, tutorial is done, report any mistakes, provide feedback anything is welcome AND if you like it support me on [CodeCreatePlay](https://www.patreon.com/CodeCreatePlay).
