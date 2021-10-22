@@ -2,6 +2,8 @@
 
 Suppose you have any kind of projectile motion like muzzle from a tank or an arrow, then you can predict it's position at time t and draw the projectile's path as a visual feedback for the player.
 
+![Unity_pJ1j0qmXFT](https://user-images.githubusercontent.com/23467551/138454823-8d30cacc-3e69-4728-ae8e-16d850023e2a.png)
+
 When the projectile is launched it's initial data is given by
 
 <img src="https://latex.codecogs.com/svg.image?\begin{aligned}position&space;=&space;x_{0}&space;\\initial&space;velocity&space;=&space;v_{0}&space;\\acceleration\&space;due\&space;to\&space;gravity\&space;=&space;g&space;=&space;-9.8ms^{-2}&space;\\time&space;=&space;t&space;=&space;0&space;\end{aligned}&space;" title="\begin{aligned}position = x_{0} \\initial velocity = v_{0} \\acceleration\ due\ to\ gravity\ = g = -9.8ms^{-2} \\time = t = 0 \end{aligned} " />
