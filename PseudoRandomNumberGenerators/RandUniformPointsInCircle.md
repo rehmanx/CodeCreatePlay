@@ -1,8 +1,8 @@
-### This tutorial is made for CodeCreatePlay Patreon page.
+### This tutorial is made for [CodeCreatePlay](https://www.patreon.com/CodeCreatePlay) Patreon page.
 
 ![jFRbrSPEfr](https://user-images.githubusercontent.com/23467551/137761980-7d7c55b0-1df4-49ca-885b-c17b3deed887.gif)
 
-Suppose you want to spawn enemies around your player in a fixed circular radius or you want to create a brush tool to paint gameobjects in your level without enemies or gameobjects clustering in any specific area then in this tutorial you can learn how to do it.
+Suppose you want to spawn enemies around your player in a fixed circular radius or you want to create a brush tool to paint gameobjects in your level without enemies or gameobjects clustering in any specific area then in this tutorial you will learn how to do it.
 
 First visualize a circle, we are going to do this is UnityEditor mode.
  - create a new C# script **RandUniformPointsInCircle.cs**, and attach it to a **GameObject**.
@@ -266,4 +266,4 @@ Main part of tutorial is done, just one last thing as with circle these current 
     }
 ```
 
-### _Everything seems good now, tutorial is done, report any mistakes, provide feedback anything is welcome AND if you like it support me on patreon._ 
+### _Everything seems good now, tutorial is done, report any mistakes, provide feedback anything is welcome AND if you like it support me on [CodeCreatePlay](https://www.patreon.com/CodeCreatePlay)._ 
