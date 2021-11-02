@@ -72,9 +72,30 @@ This gif shows results from out current approach, this definately is not unifrom
 1. the points are clustered at the origin close to axis of rotation.
 2. the other problem is 
 
-Solution to first problem I have explained in this circle tutorial, basically as distance **r** increases from 0 to 1 we need to give more probability to higher   
+Solution to first problem I have explained in this circle tutorial, basically as distance **r** increases from 0 to 1, area of sphere increases more points are needed to fill largere areas so we need to give more probability of distribution to larger areas of sphere, we can easily do this with **power** function.
 
-The problem with our algorithm is diagnosed.. now for the solution, first let's consider the relationship between area and density of points which is they are inversely proportionally mathematically   
+```
+    void GenerateUniformPointsInSphere(int count)
+    {
+        generatedPoints.Clear();
+
+        for (int i = 0; i < count; i++)
+        {
+            var theta = Random.Range(0, TWO_PI);
+            var phi = Random.Range(0, Mathf.PI);
+            var r = Mathf.Pow(Random.Range(0f, 1f), 1 / 2f) * radius;
+
+            float x = r * Mathf.Sin(phi) * Mathf.Cos(theta);
+            float y = r * Mathf.Sin(phi) * Mathf.Sin(theta);
+            float z = r * Mathf.Cos(phi);
+
+            Vector3 pos = new Vector3(x, y, z);
+            generatedPoints.Add(pos);
+        }
+    }
+```
+
+First let's consider the relationship between area and density of points which is they are inversely proportionally mathematically   
 
 <img src="https://latex.codecogs.com/svg.image?f(x)&space;=&space;1/4\pi&space;r^{2}&space;\&space;where\&space;4\pi&space;r^{2}\&space;is\&space;area\&space;of\&space;sphere" title="f(x) = 1/4\pi r^{2} \ where\ 4\pi r^{2}\ is\ area\ of\ sphere" />   
 
