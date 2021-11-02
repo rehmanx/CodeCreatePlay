@@ -70,7 +70,7 @@ public class RandUniformPointsInSphere : MonoBehaviour
 
 This gif shows results from out current approach, this definately is not unifrom distribution, there are two problems with this distribution.
 1. the points are clustered at the origin close to axis of rotation.
-2. the other problem is 
+2. the other problem is more points are distributed cylinderically from north to south pole of sphere.
 
 Solution to first problem I have explained in this circle tutorial, basically as distance **r** increases from 0 to 1, area of sphere increases more points are needed to fill largere areas so we need to give more probability of distribution to larger areas of sphere, we can easily do this with **power** function.
 
@@ -95,25 +95,27 @@ Solution to first problem I have explained in this circle tutorial, basically as
     }
 ```
 
-First let's consider the relationship between area and density of points which is they are inversely proportionally mathematically   
+The second problem is if you consider the two angles θ and φ, if you distribute them uniformly they will wrap around a cylinder not a sphere not will favour polor locations, to elaborate it more I have chosen a fixed value of **r** and plotted the distribution, I have also added a cylinder from one pole to another notice the distribution is thin more at equator where area of sphere is highest.
+
+To solve this we need to find the distribution of θ and φ for the area of sphere, as area increases density of points decreases so they are inversely proportional, so we can write
 
 <img src="https://latex.codecogs.com/svg.image?f(x)&space;=&space;1/4\pi&space;r^{2}&space;\&space;where\&space;4\pi&space;r^{2}\&space;is\&space;area\&space;of\&space;sphere" title="f(x) = 1/4\pi r^{2} \ where\ 4\pi r^{2}\ is\ area\ of\ sphere" />   
 
-What this means is we need a distribution that is **1/4π where r = 1** for whole area of sphere.
-
-But first we need distributions of θ and φ for the area of sphere, the joint distribution of θ and φ can be written as   
+What this means is we need a distribution that is **1/4π where r = 1** for whole area of sphere, the joint distribution of r, θ and φ can be written as   
 
 <img src="https://latex.codecogs.com/svg.image?f(\theta,&space;\phi,&space;r)&space;=&space;sin\theta/4\pi&space;r^{2}\&space;\&space;where\&space;r&space;=&space;1\&space;and\&space;sin\theta\&space;is\&space;jacobian\&space;of\&space;transformation" title="f(\theta, \phi, r) = sin\theta/4\pi r^{2}\ \ where\ r = 1\ and\ sin\theta\ is\ jacobian\ of\ transformation" />
 
-Distribution or PDF for θ by integrating w.r.t to φ ~ uniform[0, π].
+To actually find the distribution of θ and φ we will use use a technique called **Inverse transform sampling**, I might actually update this tutorial sometime later and explain this technique in more detail but if you don't understand skip this part and jump right to code and copy paste.
+
+Distribution or PDF (probability distribution function) for θ is found by integrating w.r.t to φ ~ uniform[0, π].
 
 <img src="https://latex.codecogs.com/gif.latex?\begin{aligned}&space;f(\theta)&space;=&space;\int_{0}^{\pi}&space;=&space;sin\phi/4\pi&space;\\&space;=&space;-cos\phi/4\pi&space;\&space;|_{0}^{\pi}\textrm{}&space;=&space;1/2\pi&space;\\&space;=>&space;\theta&space;=&space;uniform&space;(0,&space;2\pi)&space;\end{aligned}" title="\begin{aligned} f(\theta) = \int_{0}^{\pi} = sin\phi/4\pi \\ = -cos\phi/4\pi \ |_{0}^{\pi}\textrm{} = 1/2\pi \\ => \theta = uniform (0, 2\pi) \end{aligned}" />
 
-Distribution of φ is found by first creating a PDF (integrat w.r.t to θ ~ uniform(0, 2π)), from it we create CDF and finally inverting it.
+Distribution of φ is found by first creating a PDF (integrat w.r.t to θ ~ uniform(0, 2π)), from it we create CDF (commulative distribution function) and finally inverting it.
 
 <img src="https://latex.codecogs.com/svg.image?\begin{aligned}f(\phi)&space;=&space;\int_{0}^{2\pi&space;}&space;sin\phi&space;/&space;4\pi&space;\&space;d\theta&space;\\f(\phi)&space;=&space;sin&space;\phi/2&space;\\now\&space;for\&space;CDF\\f(\phi)&space;=&space;\int_{0}^{\theta}&space;sin&space;\phi/2&space;\\=&space;1/2(1-cos\phi)&space;\\but\&space;f(\phi)\&space;is\&space;uniform(0,&space;\pi)&space;=&space;u&space;\\u&space;=&space;1/2(1-cos\phi)&space;\\&space;\phi&space;=&space;\cos^{-1}(1-2u)\end{aligned}" title="\begin{aligned}f(\phi) = \int_{0}^{2\pi } sin\phi / 4\pi \ d\theta \\f(\phi) = sin \phi/2 \\now\ for\ CDF\\f(\phi) = \int_{0}^{\theta} sin \phi/2 \\= 1/2(1-cos\phi) \\but\ f(\phi)\ is\ uniform(0, \pi) = u \\u = 1/2(1-cos\phi) \\ \phi = \cos^{-1}(1-2u)\end{aligned}" />
 
-Now we have the distributions of φ and θ let's do this in code.
+Now we know the distributions of φ and θ let's update the code.
 
 ```
     void GenerateUniformPointsInSphere(int count)
@@ -136,7 +138,6 @@ Now we have the distributions of φ and θ let's do this in code.
     }
 ```
 
-If you are curious about value of **r** and power function, then take a look at circle tutorial I mentioned before and that's just it uniformly distributed points inside a unit sphere.
 
 ![bTSKARi1QG](https://user-images.githubusercontent.com/23467551/137982118-5abb40e5-262b-4301-ab91-43a818ca3c0b.gif)
 
@@ -154,7 +155,5 @@ If you are curious about value of **r** and power function, then take a look at 
             Gizmos.DrawSphere(transform.TransformPoint(generatedPoints[i]), debugPointRadius);
     }
 ```
-
-The technique we used for uniformly distributing points is called **Inverse transform sampling**, but that's not the main topic here and more on it some other day.
 
 ### _Everything seems good now, tutorial is done, report any mistakes, provide feedback anything is welcome AND if you like it support me on [CodeCreatePlay](https://www.patreon.com/CodeCreatePlay)._ 
