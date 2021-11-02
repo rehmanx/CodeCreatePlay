@@ -68,31 +68,19 @@ public class RandUniformPointsInSphere : MonoBehaviour
 
 ![tklTcJFAOG](https://user-images.githubusercontent.com/23467551/137183298-075c4fcd-e914-4e5f-8353-f01434bd8c25.gif)
 
-This gif shows results from out current approach, this definately is not unifrom distribution, the points are clustered at the origin close to axis of rotation... recall from random uniform points inside circle tutorial that as r (distance from origin) increases area increases with it and so is it's density but we are chosing constant distribution of points for entire area of sphere this creates same number of points for the smallest to largest area of sphere which causes this clustering since for larger area larger should be the distribution of points.
+This gif shows results from out current approach, this definately is not unifrom distribution, there are two problems with this distribution.
+1. the points are clustered at the origin close to axis of rotation.
+2. the other problem is 
+
+Solution to first problem I have explained in this circle tutorial, basically as distance **r** increases from 0 to 1 we need to give more probability to higher   
 
 The problem with our algorithm is diagnosed.. now for the solution, first let's consider the relationship between area and density of points which is they are inversely proportionally mathematically   
 
 <img src="https://latex.codecogs.com/svg.image?f(x)&space;=&space;1/4\pi&space;r^{2}&space;\&space;where\&space;4\pi&space;r^{2}\&space;is\&space;area\&space;of\&space;sphere" title="f(x) = 1/4\pi r^{2} \ where\ 4\pi r^{2}\ is\ area\ of\ sphere" />   
 
-What this means is we need a distribution that is **1/4π where r = 1** for whole area of sphere, but before we proceed I want to introduce two concepts from statistics which are **Probability density function (PDF)** and **Cumulative distribution function (CDF)**.
+What this means is we need a distribution that is **1/4π where r = 1** for whole area of sphere.
 
-In simple terms **PDF** is the probability that a random variable **X** will take a value exactly equal to **x**.   
-And **CDF** is the probability that a random variable **X** will take a value less then or equal to **x**.   
-So for example if you cast a die
-- the probability of obtaining **1, 2, 3, 4, 5, 6 is = 1/6 * 100 = 16.666%**.
-- the PDF or the probability that you will get **2** is exactly 16.666%.
-- the CDF or the probability that you will get **2** is 33.333% since there are two possible values i.e. 1 and 2, similarly probability that you will get **6** is 100&.
-
-![meta-chart](https://user-images.githubusercontent.com/23467551/138130697-505d9360-b78a-4690-9881-5c28c4044b98.png)
-
-![meta-chart (2)](https://user-images.githubusercontent.com/23467551/138132435-8165666c-b600-4118-8be8-cf122dd911e8.png)
-
-For the sake of the moment let's plot a graph for CDF and invert it.
-
-![Qe4u0](https://user-images.githubusercontent.com/23467551/138133497-99b3226b-b14d-498d-a132-41297a540246.png) 
-![UA2sT](https://user-images.githubusercontent.com/23467551/138133657-a7d7ef0b-96d7-4f19-b2fa-8a0041fc70e1.png)
-
-Noticed any similarity ? this is almost the distribution we used when uniformly distributing points in a circle and this is what we need for sphere as well, but first we need distributions of θ and φ for the area of sphere, the joint distribution of θ and φ can be written as   
+But first we need distributions of θ and φ for the area of sphere, the joint distribution of θ and φ can be written as   
 
 <img src="https://latex.codecogs.com/svg.image?f(\theta,&space;\phi,&space;r)&space;=&space;sin\theta/4\pi&space;r^{2}\&space;\&space;where\&space;r&space;=&space;1\&space;and\&space;sin\theta\&space;is\&space;jacobian\&space;of\&space;transformation" title="f(\theta, \phi, r) = sin\theta/4\pi r^{2}\ \ where\ r = 1\ and\ sin\theta\ is\ jacobian\ of\ transformation" />
 
