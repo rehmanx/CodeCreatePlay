@@ -6,6 +6,8 @@ This is a two part tutorial in this part we will create a cannon ball projectile
 
 First let's create a simple rigidbody we will use it as our projectile object, we will give it an initial velocity when we launch it, in turn it will move in direction of velocity, after launch the only force on it will be acceleration due to gravity.
 
+Open the start scene it has a basic cannon setup press **w** and **s** keys to move in up or down. 
+
 We know that 
 1. velocity is rate of change of position over time
 2. and position is rate of change of velocity 
@@ -44,6 +46,12 @@ public class Projectile : MonoBehaviour
 }
 ```
 
-that's all we need to do for moving the projectile realistically.
+now if we give this projectile an initial velocity and set a constant acceleration is all we need to do for moving the projectile realistically, now to programme the cannon to fire cannon balls, create a new script **Cannon** and in it add
+- a new class **ProjectileData** this will hold initial data for our projectile like launch speed and gravity.
+- a reference to the cannon ball projectile prefab and a float field **timeDelay** (see the comments for details).
+
+```
+
+```
 
 ### Everything seems good now, tutorial is done, report any mistakes, provide feedback anything is welcome AND if you like it support me on [CodeCreatePlay](https://www.patreon.com/CodeCreatePlay).
