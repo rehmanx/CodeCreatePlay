@@ -104,6 +104,9 @@ We want to fire the cannon when user hits the Space key, when the cannon is fire
     {
         if(Input.GetKeyDown(KeyCode.Space) && Time.time > nextFire)
         {
+            // set the initial data for the projectile.
+            SetProjectileData();
+            
             nextFire = Time.time + fireDelay;
             Fire();
         }
@@ -113,10 +116,7 @@ We want to fire the cannon when user hits the Space key, when the cannon is fire
     {
         // instantiate cannon ball prefab at launch position.
         var cannonBall = Instantiate(projectile, launchPos.position, Quaternion.identity);
-        
-        // calculate and set the initial data for the projectile.
-        SetProjectileData();
-        
+                
         // give it an initial velocity and an acceleration.
         cannonBall.Acceleration = acceleration;
         cannonBall.Velocity = velocity;
@@ -149,21 +149,83 @@ All we have to do is try to solve for the knowns and we can figure out the neces
     public class CustomProjectileData
     {
         public Transform target = null;
-
-        [Range(0, 360)]
-        public float angle = 45f;
-
-        [HideInInspector]
-        public Vector3 fireVec = Vector3.zero;
-
-        [HideInInspector]
-        public float gravity = 0;
+        public float speed = 10f;
     }
     
     // initializations
     public CustomProjectileData customProjectileData = new CustomProjectileData();
 ```
 
-now create a new method **CalculateCustomProjectileData** to calculate and set the initial velocity and gravity values for our custom projectile.
+now create a new method **CalculateAndSetCustomProjectileData** to calculate and set the initial velocity and gravity values for our custom projectile, I have added comments with each step with better explain
+
+```
+    public void CalculateAndSetCustomProjectileData()
+    {
+        // get a vector from our current position to target position.
+        Vector3 fireVec = customProjectileData.target.position - transform.position;
+
+        // find distance from our cannon's position to target's position
+        float totalDistance = Vector3.Distance(customProjectileData.target.position, transform.position);
+
+        fireVec.Normalize(); // normalize fireVec to convert it to direction 
+        // y-comp of fireVec is launch angle remember to convert it to radians.
+        fireVec.y = Vector3.Angle(transform.forward, Vector3.forward) * Mathf.Deg2Rad;
+        fireVec *= customProjectileData.speed; // scale magnitude of fireVec to set an initial launch speed
+
+        // this is speed  we are moving on horizontal xz-axis, it is found by finding distance of fireVec
+        float vx = Mathf.Sqrt(fireVec.x * fireVec.x + fireVec.z * fireVec.z);
+
+        // time
+        float t = totalDistance / vx;
+
+        // now for vertical componetns
+        float vy = fireVec.y; // speed on y or vertical axis
+        float y = customProjectileData.target.position.y - transform.position.y; // this is height
+
+        // putting values in equation we derieved
+        float gravity = (2f * (y - vy * t)) / (t * t);
+
+        // the initial velocity and acceleration of projectile
+        velocity = fireVec;
+        acceleration = Vector3.down * -gravity;
+    }
+```
+
+I have added an enum to change which type of calculation to be done when we hit space key so now the updated code is
+
+```
+    public enum Type
+    {
+        Realistic,
+        Custom
+    }
+
+    // initializations
+    public Type type = Type.Realistic;
+    
+    void Update()
+    {
+        if(Input.GetKeyDown(KeyCode.Space) && Time.time > nextFire)
+        {
+            switch (type)
+            {
+                case Type.Realistic:
+                    SetProjectileData();
+                    break;
+
+                case Type.Custom:
+                    CalculateAndSetCustomProjectileData();
+                    break;
+            }
+
+            nextFire = Time.time + fireDelay;
+            Fire();
+        }
+    }
+```
+
+here are the results cannon ball always hit the target no matter what initial speed or launch angle are
+
+
 
 ### Everything seems good now, tutorial is done, report any mistakes, provide feedback anything is welcome AND if you like it support me on [CodeCreatePlay](https://www.patreon.com/CodeCreatePlay).
