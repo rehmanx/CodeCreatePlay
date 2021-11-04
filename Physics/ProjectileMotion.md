@@ -51,7 +51,49 @@ now if we give this projectile an initial velocity and set a constant accelerati
 - a reference to the cannon ball projectile prefab and a float field **timeDelay** (see the comments for details).
 
 ```
+public class Cannon : MonoBehaviour
+{
+    // data for our realistic projectile
+    [System.Serializable]
+    public class RealisticProjectileData
+    {
+        [HideInInspector]
+        public Vector3 initialVelocity = Vector3.zero; // the initial velocity with which to launch the projectile
+        
+        public float speed = 10f; // the initial speed
+        public float gravity = 9.8f;
+    }
+    
+    // initializations
+    public RealisticProjectileData realisticProjectileData = new RealisticProjectileData();
+    
+    [Header("References")]
+    public GameObject projectile = null;
+    
+    [Header("Other")]
+    public float fireDelay = 1f; // time delay between two fires
+    float nextFire = 0; // internally used to hold time for next fire
+    
+    // private
+    Vector3 velocity = Vector3.zero; 
+}
+```
+
+To calculate the initial values like launch angle, direction to give to projectile when it is launched, we can split the motion of projectile into horizontal **X-axis and Z-axus** and vertical components **Y-axis**, initial horizontal direction of projectile is same as direction of cannon ball on **X and Z axis**
 
 ```
+    public void SetProjectileData()
+    {
+        realisticProjectileData.initialVelocity = transform.forward; // this is initial direction in 
+        realisticProjectileData.initialVelocity.y = Mathf.Deg2Rad * Vector3.Angle(Vector3.forward, transform.forward);
+
+        realisticProjectileData.initialVelocity *= realisticProjectileData.speed;
+
+        // the initial velocity of physical object
+        velocity = realisticProjectileData.initialVelocity;
+    }
+```
+
+We want to instantiate the cannon ball user hit the Space 
 
 ### Everything seems good now, tutorial is done, report any mistakes, provide feedback anything is welcome AND if you like it support me on [CodeCreatePlay](https://www.patreon.com/CodeCreatePlay).
