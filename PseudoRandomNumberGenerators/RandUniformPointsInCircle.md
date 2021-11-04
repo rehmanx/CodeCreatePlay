@@ -193,7 +193,7 @@ public class RandUniformPointsInCircleEd : UnityEditor.Editor
 
 ![Unity_nJS3Lq6AW2](https://user-images.githubusercontent.com/23467551/137636170-db2cabfd-05fe-4946-b6cc-1ba3e191ea56.png)
 
-And depending on the requirements this may or may not be what you want, the reason points are generated more dense near the origin is uniform or constant probability of distribution of points across the entire area of circle, as distance from origin increases the area of circle increases with it, twice as many points are needed to fill the larger areas, in other words the density of points is inversely propertional to area mathematically 
+And depending on the requirements this may or may not be what you want, the reason points are generated more dense near the origin is constant probability of distribution of points across the entire area of circle however as distance from origin increases the area of circle increases with it, twice as many points are needed to fill the larger areas, in other words the density of points is inversely propertional to area mathematically 
 
 <img src="https://latex.codecogs.com/gif.latex?f(x)&space;=&space;1/2\pi\&space;where\&space;2\pi\&space;is\&space;the\&space;area\&space;of\&space;circle\" title="f(x) = 1/2\pi\ where\ 2\pi\ is\ the\ area\ of\ circle\" />
 
