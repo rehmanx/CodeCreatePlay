@@ -125,8 +125,45 @@ We want to fire the cannon when user hits the Space key, when the cannon is fire
 
 and the results... change values from inspector to get different trajectories.
 
+This was simple, but now for the fun part, right now although we can change some variables like speed, gravity and launch angle to get different results but we have no control of where the projectile will land, in this part we will actually make the projectile always hit some particular target, so ok let's do that.
+
+**Review of kinematic equations**
+we all have studied kinematic equations in our high school physics it's a good time to put that knowledge to good use.
+
+![CodeCogsEqn (1)](https://user-images.githubusercontent.com/23467551/140335336-f5bfee09-3e5a-4b8b-97b0-571b4f1313b3.gif)
+
+We can divide the motion of projectile into vertical x and y components seperately and solve for motion on x and y axis seperately
+
+![CodeCogsEqn (4)](https://user-images.githubusercontent.com/23467551/140366332-233000f7-3164-4995-88f9-c969ebff1f9b.gif)
 
 
-To calculate the initial values like launch angle, direction to give to projectile when it is launched, we can split the motion of projectile into horizontal **X-axis and Z-axus** and vertical components **Y-axis**, initial horizontal direction of projectile is same as direction of cannon ball on **X and Z axis**
+So, this equation will tell us the X and Y position of a projectile at any point in time, that's handy, however, we already know where we want our projectile to be, we want it to be on our target, we know the X and Y position of our target and we know our initial velocity, so we have a few knowns, if we can solve for time, we can solve for our gravity constant, here is the math for it
+
+![CodeCogsEqn (5)](https://user-images.githubusercontent.com/23467551/140370699-83c66e0e-c609-448d-b874-075f460bb19f.gif)
+
+All we have to do is try to solve for the knowns and we can figure out the necessary gravity constant, let's do this straight in the code I have added comments with each step, first add a new class **CustomProjectileData** to hold data for our custom projectile 
+
+```
+    // data for our custom projectile
+    [System.Serializable]
+    public class CustomProjectileData
+    {
+        public Transform target = null;
+
+        [Range(0, 360)]
+        public float angle = 45f;
+
+        [HideInInspector]
+        public Vector3 fireVec = Vector3.zero;
+
+        [HideInInspector]
+        public float gravity = 0;
+    }
+    
+    // initializations
+    public CustomProjectileData customProjectileData = new CustomProjectileData();
+```
+
+now create a new method **CalculateCustomProjectileData** to calculate and set the initial velocity and gravity values for our custom projectile.
 
 ### Everything seems good now, tutorial is done, report any mistakes, provide feedback anything is welcome AND if you like it support me on [CodeCreatePlay](https://www.patreon.com/CodeCreatePlay).
