@@ -216,6 +216,6 @@ I have added an enum to change which type of calculation to be done when we hit 
     }
 ```
 
-and here are the final results, cannon ball always hit the target no matter what initial speed or launch angle are, that's it for first part in next part we will calculate and draw the projectile's trajectory, see you till then.
+and here are the final results, cannon ball always hit the target no matter what initial speed or launch angle are and that's it for first part in next part we will calculate and draw the projectile's trajectory, see you till then.
 
 ### Everything seems good now, tutorial is done, report any mistakes, provide feedback anything is welcome AND if you like it support me on [CodeCreatePlay](https://www.patreon.com/CodeCreatePlay).
