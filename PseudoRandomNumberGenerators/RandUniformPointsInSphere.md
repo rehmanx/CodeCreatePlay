@@ -32,7 +32,7 @@ public class RandUniformPointsInSphere : MonoBehaviour
         GenerateUniformPointsInSphere(count);
     }
 
-    const int TWO_PI = 360;
+    const float TWO_PI = 2 * Mathf.PI;
 
     void GenerateUniformPointsInSphere(int count)
     {
@@ -72,30 +72,7 @@ This gif shows results from out current approach, this definately is not unifrom
 1. the points are clustered at the origin close to axis of rotation.
 2. the other problem is more points are distributed cylinderically from north to south pole of sphere.
 
-Solution to first problem I have explained in this circle tutorial, basically as distance **r** increases from 0 to 1, area of sphere increases more points are needed to fill largere areas so we need to give more probability of distribution to larger areas of sphere, we can easily do this with **power** function.
-
-```
-    void GenerateUniformPointsInSphere(int count)
-    {
-        generatedPoints.Clear();
-
-        for (int i = 0; i < count; i++)
-        {
-            var theta = Random.Range(0, TWO_PI);
-            var phi = Random.Range(0, Mathf.PI);
-            var r = Mathf.Pow(Random.Range(0f, 1f), 1 / 2f) * radius;
-
-            float x = r * Mathf.Sin(phi) * Mathf.Cos(theta);
-            float y = r * Mathf.Sin(phi) * Mathf.Sin(theta);
-            float z = r * Mathf.Cos(phi);
-
-            Vector3 pos = new Vector3(x, y, z);
-            generatedPoints.Add(pos);
-        }
-    }
-```
-
-The second problem is if you consider the two angles θ and φ, if you distribute them uniformly they will wrap around a cylinder not a sphere not will favour polor locations, to elaborate it more I have chosen a fixed value of **r** and plotted the distribution, I have also added a cylinder from one pole to another notice the distribution is thin more at equator where area of sphere is highest.
+The problem is if you consider the two angles θ and φ, if you distribute them uniformly they will wrap around a cylinder not a sphere not will favour polor locations, to elaborate it more I have chosen a fixed value of **r** and plotted the distribution, I have also added a cylinder from one pole to another notice the distribution is thin more at equator where area of sphere is highest.
 
 To solve this we need to find the distribution of θ and φ for the area of sphere, as area increases density of points decreases so they are inversely proportional, so we can write
 
@@ -138,6 +115,7 @@ Now we know the distributions of φ and θ let's update the code.
     }
 ```
 
+If you are curious where the **Power** function comes from see the previous circle tutorial and now for the results.
 
 ![bTSKARi1QG](https://user-images.githubusercontent.com/23467551/137982118-5abb40e5-262b-4301-ab91-43a818ca3c0b.gif)
 
@@ -155,5 +133,7 @@ Now we know the distributions of φ and θ let's update the code.
             Gizmos.DrawSphere(transform.TransformPoint(generatedPoints[i]), debugPointRadius);
     }
 ```
+
+and it's done !
 
 ### _Everything seems good now, tutorial is done, report any mistakes, provide feedback anything is welcome AND if you like it support me on [CodeCreatePlay](https://www.patreon.com/CodeCreatePlay)._ 
