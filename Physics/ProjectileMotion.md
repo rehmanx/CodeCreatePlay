@@ -6,7 +6,7 @@ This is a two part tutorial in this part we will create a cannon ball projectile
 
 Open the start scene it has a basic cannon setup press **w** and **s** keys to move in up or down. 
 
-First let's create a simple rigidbody we will use it as our projectile object, we will give it an initial velocity when we launch it, in turn it will move in direction of velocity, after launch the only force on it will be acceleration due to gravity.
+First let's create a simple rigidbody we will use it as our projectile object, if we give this projectile an initial velocity, then it will move in direction of velocity, after launch the only force on it will be acceleration due to gravity.
 
 We know that 
 1. velocity is rate of change of position over time
@@ -27,10 +27,6 @@ public class Projectile : MonoBehaviour
     public Vector3 Velocity { set { velocity = value; } get { return velocity; } }
     public Vector3 Position { get { return position; } set { position = value; } }
 
-    void Start()
-    {
-    }
-
     void Update()
     {
         // update physical object
@@ -45,7 +41,7 @@ public class Projectile : MonoBehaviour
 }
 ```
 
-now if we give this projectile an initial velocity and set a constant acceleration is all we need to do for moving the projectile realistically, now to programme the cannon to fire cannon balls, create a new script **Cannon** and in it add
+now all we need is to give this projectile an initial velocity and set a constant acceleration to move it realistically, now to programme the cannon to fire cannon balls, create a new script **Cannon** and in it add
 - a new class **ProjectileData** this will hold initial data for our projectile like launch speed and gravity.
 - a reference to the cannon ball projectile prefab and a float field **timeDelay** (see the comments for details).
 
@@ -67,8 +63,8 @@ public class Cannon : MonoBehaviour
     public ProjectileData projectileData = new ProjectileData();
     
     [Header("References")]
-    public Projectile projectile = null;
-    public Transform launchPos = null;
+    public Projectile projectile = null; // the actual projectile prefab
+    public Transform launchPos = null; // projectile will be instantiated and launched from this position
     
     [Header("Other")]
     public float fireDelay = 1f; // time delay between two fires
@@ -81,34 +77,31 @@ public class Cannon : MonoBehaviour
 }
 ```
 
-To launch the projectile we only have to give it an initial velocity, remember velocity is a vector quantity with both speed and direction, in this case the direction is the forward facing direction of cannon and speed is set manually, so now to do this in code create a new method **SetProjectileData** to set initial launch data for projectile.
+To launch the projectile we only have to give it an initial velocity, remember velocity is a vector quantity with both speed and direction, in this case the direction is the forward facing direction of cannon and speed is set manually, so now to do this in code create a new method **CalculateProjectileData** to calculate and set initial launch data for projectile.
 
 ```
-    public void SetProjectileData()
+    public void CalculateProjectileData()
     {
-        realisticProjectileData.initialVelocity = transform.forward; // transform.forward is the forward facing direction of cannon is local space
-        realisticProjectileData.initialVelocity *= realisticProjectileData.speed; // speed is set manually 
+        projectileData.velocity = transform.forward;
+        projectileData.velocity *= projectileData.speed;
 
-        // the initial velocity of physical object
-        velocity = realisticProjectileData.initialVelocity;
-        
-        // the constant acceleration due to gravity
-        acceleration = Vector3.down * realisticProjectileData.gravity;
+        // the initial velocity and acceleration of projectile
+        velocity = projectileData.velocity;
+        acceleration = Vector3.down * projectileData.gravity;
     }
 ```
 
-We want to fire the cannon when user hits the Space key, when the cannon is fired we want to first intantiate the cannon ball projectile prefab then give it initial data, in update method first chcek if user has pressed the space key if yes then I have created a new method **Fire** to actually instantiate and set initial launch data for projectile, the cannon ball projectile is instantiated at launchPos.
+We want to fire the cannon when user hits the Space key, when the cannon is fired we want to first intantiate the cannon ball projectile prefab then set it's initial data like velocity and constant acceleration due to gravity, in update method first chcek if user has pressed the space key if yes then first call **CalculateProjectileData** to calculate initial data for projectile and then finally I have created a new method **Fire** to actually instantiate and set initial launch data for projectile, the cannon ball projectile is instantiated at **launchPos**.
 
 ```
     void Update()
     {
         if(Input.GetKeyDown(KeyCode.Space) && Time.time > nextFire)
         {
-            // set the initial data for the projectile.
-            SetProjectileData();
+            CalculateProjectileData(); // set the initial data for the projectile.
+            Fire(); 
             
             nextFire = Time.time + fireDelay;
-            Fire();
         }
     }
     
@@ -125,7 +118,7 @@ We want to fire the cannon when user hits the Space key, when the cannon is fire
 
 and the results... change values from inspector to get different trajectories.
 
-This was simple, but now for the fun part, right now although we can change some variables like speed, gravity and launch angle to get different results but we have no control of where the projectile will land, in this part we will actually make the projectile always hit some particular target, so ok let's do that.
+This was simple, but now for the fun part, right now although we can change some variables like speed, gravity and launch angle and have the projectile follow completly different paths at differnt speeds but we have no control of where the projectile will land, in this part we will actually make the projectile always hit some particular target, so ok let's do that.
 
 **Review of kinematic equations**
 we all have studied kinematic equations in our high school physics it's a good time to put that knowledge to good use.
@@ -135,7 +128,6 @@ we all have studied kinematic equations in our high school physics it's a good t
 We can divide the motion of projectile into vertical x and y components seperately and solve for motion on x and y axis seperately
 
 ![CodeCogsEqn (4)](https://user-images.githubusercontent.com/23467551/140366332-233000f7-3164-4995-88f9-c969ebff1f9b.gif)
-
 
 So, this equation will tell us the X and Y position of a projectile at any point in time, that's handy, however, we already know where we want our projectile to be, we want it to be on our target, we know the X and Y position of our target and we know our initial velocity, so we have a few knowns, if we can solve for time, we can solve for our gravity constant, here is the math for it
 
@@ -156,10 +148,10 @@ All we have to do is try to solve for the knowns and we can figure out the neces
     public CustomProjectileData customProjectileData = new CustomProjectileData();
 ```
 
-now create a new method **CalculateAndSetCustomProjectileData** to calculate and set the initial velocity and gravity values for our custom projectile, I have added comments with each step with better explain
+now create a new method **CalculateCustomProjectileData** to calculate and set the initial velocity and gravity values for our custom projectile, I have added comments with each step to better explain
 
 ```
-    public void CalculateAndSetCustomProjectileData()
+    public void CalculateCustomProjectileData()
     {
         // get a vector from our current position to target position.
         Vector3 fireVec = customProjectileData.target.position - transform.position;
@@ -214,7 +206,7 @@ I have added an enum to change which type of calculation to be done when we hit 
                     break;
 
                 case Type.Custom:
-                    CalculateAndSetCustomProjectileData();
+                    CalculateCustomProjectileData();
                     break;
             }
 
@@ -224,8 +216,6 @@ I have added an enum to change which type of calculation to be done when we hit 
     }
 ```
 
-here are the results cannon ball always hit the target no matter what initial speed or launch angle are
-
-
+and here are the final results, cannon ball always hit the target no matter what initial speed or launch angle are, that's it for first part in next part we will calculate and draw the projectile's trajectory, see you till then.
 
 ### Everything seems good now, tutorial is done, report any mistakes, provide feedback anything is welcome AND if you like it support me on [CodeCreatePlay](https://www.patreon.com/CodeCreatePlay).
