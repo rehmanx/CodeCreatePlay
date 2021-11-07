@@ -4,7 +4,9 @@
 
 Projectile motion is the motion of a body when projected or thrown into the air and subjected only to acceleration due to gravity, the path it takes is called **project's trajectory**, examples are motion of a football or that of a cannon ball when fired from a cannon.
 
-This is a two part tutorial in this part we will create a cannon ball projectile but concept is same regardless of type of object, in second part we will visualize the projectile's trajectory the path that projectile will take before actually launching it as a visual feedback for the player. If you are a [CodeCreatePlay](https://www.patreon.com/CodeCreatePlay) patreon you can download the project files for this tutorial here.
+This is a two part tutorial in this part we will create a cannon ball projectile but concept is same regardless of type of object, in second part we will visualize the projectile's trajectory the path that projectile will take before actually launching it as a visual feedback for the player. If you are a [CodeCreatePlay](https://www.patreon.com/CodeCreatePlay) patreon you can download the project files **(unity's default standard pipeline)** for this tutorial here, in tutorial files you will find a demo scene setup with a cannon setup that can rotate or x and z axis, the cannon has a **CannonControls** script which need a reference to the cannon barrel (the part of cannon which actually rotates and fire the cannon balls).
+
+![demoSceneStart](https://user-images.githubusercontent.com/23467551/140632879-9d5d0ff8-1370-4498-b9bd-c050f266acc9.png)
 
 Open the start scene it has a basic cannon setup press **w** and **s** keys to move in up or down. 
 
@@ -55,7 +57,7 @@ public class Cannon : MonoBehaviour
     public class ProjectileData
     {
         [HideInInspector]
-        public Vector3 velocity = Vector3.zero; // the initial velocity with which to launch the projectile
+        public Vector3 velocity = Vector3.zero; // the initial velocity
         
         public float speed = 10f; // the initial speed
         public float gravity = 9.8f;
@@ -84,8 +86,8 @@ To launch the projectile we only have to give it an initial velocity, remember v
 ```
     public void CalculateProjectileData()
     {
-        projectileData.velocity = transform.forward;
-        projectileData.velocity *= projectileData.speed;
+        projectileData.velocity = launchPos.transform.forward; // direction
+        projectileData.velocity *= projectileData.speed; // initial acceleration
 
         // the initial velocity and acceleration of projectile
         velocity = projectileData.velocity;
