@@ -1,5 +1,7 @@
 ### This tutorial is made for [CodeCreatePlay](https://www.patreon.com/CodeCreatePlay).
 
+![cannonDemo](https://user-images.githubusercontent.com/23467551/140632479-f8757ce1-ca00-46f2-b129-f8229abf7f4b.gif)
+
 Projectile motion is the motion of a body when projected or thrown into the air and subjected only to acceleration due to gravity, the path it takes is called **project's trajectory**, examples are motion of a football or that of a cannon ball when fired from a cannon.
 
 This is a two part tutorial in this part we will create a cannon ball projectile but concept is same regardless of type of object, in second part we will visualize the projectile's trajectory the path that projectile will take before actually launching it as a visual feedback for the player. If you are a [CodeCreatePlay](https://www.patreon.com/CodeCreatePlay) patreon you can download the project files for this tutorial here.
