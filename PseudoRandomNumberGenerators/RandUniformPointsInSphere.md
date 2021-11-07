@@ -74,7 +74,9 @@ Above image shows results from out current approach, this definately is not unif
 1. the points are clustered at the origin close to axis of rotation.
 2. the other problem is more points are distributed cylinderically from north to south pole of sphere.
 
-The problem is if you consider the two angles θ and φ, if you distribute them uniformly they will wrap around a cylinder not a sphere not will favour polor locations, to elaborate it more I have chosen a fixed value of **r** and plotted the distribution, I have also added a cylinder from one pole to another notice the distribution is thin more at equator where area of sphere is highest.
+The problem is if you consider the two angles θ and φ, if you distribute them uniformly they will wrap around a cylinder not a sphere not will favour polor locations, to elaborate it more I have chosen a fixed value of **r** say 7.5 and plotted the distribution, I have also added a cylinder from one pole to the other, notice the distribution is thin more at equator where area of sphere is highest.
+
+![Unity_C3MfxlQJbc](https://user-images.githubusercontent.com/23467551/140644698-fe6071e1-cac0-441f-95f7-9141cbc9fdf8.png)
 
 To solve this we need to find the distribution of θ and φ for the area of sphere, as area increases density of points decreases so they are inversely proportional, so we can write
 
