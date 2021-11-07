@@ -70,7 +70,7 @@ Now let's implement the equation we solved for calculating position at any tile 
     }
 ```
 
-If time t changes from 0 to n we can calculate all the positions from **t=0** to **t=n** and draw a line between them, then this line would be the trajectory of projectile, to do this create a new method **GetTrajectoryPositions** and loop over the number of times to calculate positions.
+If time t changes from 0 to n we can calculate all the positions from **t=0** to **t=n** and draw a line between them, then this line would be the trajectory of projectile, to do this create a new method **GetTrajectoryPositions** and loop the number of times to calculate and save all the positions.
 
 ```
     public List<Vector3> GetTrajectoryPositions()
@@ -91,12 +91,74 @@ If time t changes from 0 to n we can calculate all the positions from **t=0** to
     }
 ```
 
-I have set the initial data for my projectile as follows
+To draw the trajectory I will use the cannon scene from 1st part of this tutorial and use a line renderer, open **Cannon.cs** script and make the following changes, see the comments for details.
 
-![Unity_SP3lTRIxYC](https://user-images.githubusercontent.com/23467551/138330051-e7a16bd7-302b-40ee-ab09-eddc7dcb8262.png)
+```
+public class Cannon : MonoBehaviour
+{
+    [Header("References")]
+    // **previous code**
+    ProjectileTrajectory projectileTrajectory;
+    LineRenderer lineRenderer = null;
+    
+    void Start()
+    {
+        // get the components
+        lineRenderer = GetComponent<LineRenderer>();
+        projectileTrajectory = GetComponent<ProjectileTrajectory>();
 
-and here is the predicted path
+        lineRenderer.startWidth = 0.05f;
+        lineRenderer.endWidth = 0.05f;
+    }
+    
+    void Update()
+    {
+        switch (type)
+        {
+            case Type.Realistic:
+                CalculateProjectileData();
+                DrawProjectileTrajectory(velocity, projectileData.gravity);
+                break;
 
-![Unity_0CiJsxVXog](https://user-images.githubusercontent.com/23467551/138330178-363c87dc-648c-4701-bfcd-a71e29fdc399.png)
+            case Type.Custom:
+                CalculateCustomProjectileData();
+                DrawProjectileTrajectory(velocity, customProjectileData.gravity);
+                break;
+        }
+
+        if (Input.GetKeyDown(KeyCode.Space) && Time.time > nextFire)
+        {
+            nextFire = Time.time + fireDelay;
+            Fire();
+        }
+    }
+    
+    void DrawProjectileTrajectory(Vector3 vel, float gravity)
+    {
+        // only update if data is changed.
+        if(projectileTrajectory.initialVelocity != vel || 
+            projectileTrajectory.gravity != -gravity ||
+            projectileTrajectory.speed != vel.magnitude)
+        {
+            // the trajectory would start drawing from where the cannon ball is instantiated.
+            projectileTrajectory.ResetData(launchPos.position);
+            
+            projectileTrajectory.initialVelocity = vel;
+            projectileTrajectory.gravity = -gravity;
+            projectileTrajectory.speed = vel.magnitude;
+
+            // setup line renderer
+            var positions = projectileTrajectory.GetTrajectoryPositions().ToArray();
+
+            lineRenderer.positionCount = positions.Length;
+            lineRenderer.SetPositions(positions);
+        }
+    }
+}
+```
+
+and here is the calculated trajectory.
+
+![trajectory](https://user-images.githubusercontent.com/23467551/140652418-f22fd204-5b6d-406e-a73e-3e43983b4ed5.png)
 
 ### Everything seems good now, tutorial is done, report any mistakes, provide feedback anything is welcome AND if you like it support me on [CodeCreatePlay](https://www.patreon.com/CodeCreatePlay).
