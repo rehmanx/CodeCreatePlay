@@ -4,7 +4,7 @@
 
 Projectile motion is the motion of a body when projected or thrown into the air and subjected only to acceleration due to gravity, the path it takes is called **project's trajectory**, examples are motion of a football or that of a cannon ball when fired from a cannon.
 
-This is a two part tutorial in this part we will create a cannon ball projectile but concept is same regardless of type of object, in second part we will visualize the projectile's trajectory the path that projectile will take before actually launching it as a visual feedback for the player. If you are a [CodeCreatePlay](https://www.patreon.com/CodeCreatePlay) patreon you can download the project files **(unity's default standard pipeline)** for this tutorial here, in tutorial files you will find a demo scene setup with a cannon setup that can rotate or x and z axis, the cannon has a **CannonControls** script which need a reference to the cannon barrel (the part of cannon which actually rotates and fire the cannon balls), the cannon can be rotated by **w, a,s and d** keys.
+This is a two part tutorial in this part we will create a cannon ball projectile but concept is same regardless of type of object, in second part we will visualize the projectile's trajectory the path that projectile will take before actually launching it as a visual feedback for the player. If you are a [CodeCreatePlay](https://www.patreon.com/CodeCreatePlay) patreon you can download the project files **(unity's default standard pipeline)** for this tutorial here, in project files you will find a demo scene setup with a cannon setup that can rotate or x and z axis, the cannon has a **CannonControls** script which need a reference to the cannon barrel (the part of cannon which actually rotates and fire the cannon balls), the cannon can be rotated by **w, a,s and d** keys.
 
 ![demoSceneStart](https://user-images.githubusercontent.com/23467551/140632879-9d5d0ff8-1370-4498-b9bd-c050f266acc9.png)
 
@@ -154,6 +154,9 @@ All we have to do is try to solve for the knowns and we can figure out the neces
     {
         public Transform target = null;
         public float speed = 10f;
+        
+        [HideInInspector]
+        public float gravity = 0f;
     }
     
     // initializations
@@ -166,14 +169,15 @@ now create a new method **CalculateCustomProjectileData** to calculate and set t
     public void CalculateCustomProjectileData()
     {
         // get a vector from our current position to target position.
-        Vector3 fireVec = customProjectileData.target.position - transform.position;
+        Vector3 fireVec = customProjectileData.target.position - launchPos.transform.position;
 
         // find distance from our cannon's position to target's position
-        float totalDistance = Vector3.Distance(customProjectileData.target.position, transform.position);
+        float totalDistance = Vector3.Distance(customProjectileData.target.position, launchPos.transform.position);
 
         fireVec.Normalize(); // normalize fireVec to convert it to direction 
         // y-comp of fireVec is launch angle remember to convert it to radians.
-        fireVec.y = Vector3.Angle(transform.forward, Vector3.forward) * Mathf.Deg2Rad;
+        fireVec.y = -GetComponent<CannonControls>().CurrentRotaion.x * Mathf.Deg2Rad;
+
         fireVec *= customProjectileData.speed; // scale magnitude of fireVec to set an initial launch speed
 
         // this is speed  we are moving on horizontal xz-axis, it is found by finding distance of fireVec
@@ -184,7 +188,7 @@ now create a new method **CalculateCustomProjectileData** to calculate and set t
 
         // now for vertical componetns
         float vy = fireVec.y; // speed on y or vertical axis
-        float y = customProjectileData.target.position.y - transform.position.y; // this is height
+        float y = customProjectileData.target.position.y - launchPos.transform.position.y; // this is height
 
         // putting values in equation we derieved
         float gravity = (2f * (y - vy * t)) / (t * t);
@@ -192,6 +196,8 @@ now create a new method **CalculateCustomProjectileData** to calculate and set t
         // the initial velocity and acceleration of projectile
         velocity = fireVec;
         acceleration = Vector3.down * -gravity;
+
+        customProjectileData.gravity = -gravity;
     }
 ```
 
