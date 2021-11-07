@@ -4,11 +4,9 @@
 
 Projectile motion is the motion of a body when projected or thrown into the air and subjected only to acceleration due to gravity, the path it takes is called **project's trajectory**, examples are motion of a football or that of a cannon ball when fired from a cannon.
 
-This is a two part tutorial in this part we will create a cannon ball projectile but concept is same regardless of type of object, in second part we will visualize the projectile's trajectory the path that projectile will take before actually launching it as a visual feedback for the player. If you are a [CodeCreatePlay](https://www.patreon.com/CodeCreatePlay) patreon you can download the project files **(unity's default standard pipeline)** for this tutorial here, in tutorial files you will find a demo scene setup with a cannon setup that can rotate or x and z axis, the cannon has a **CannonControls** script which need a reference to the cannon barrel (the part of cannon which actually rotates and fire the cannon balls).
+This is a two part tutorial in this part we will create a cannon ball projectile but concept is same regardless of type of object, in second part we will visualize the projectile's trajectory the path that projectile will take before actually launching it as a visual feedback for the player. If you are a [CodeCreatePlay](https://www.patreon.com/CodeCreatePlay) patreon you can download the project files **(unity's default standard pipeline)** for this tutorial here, in tutorial files you will find a demo scene setup with a cannon setup that can rotate or x and z axis, the cannon has a **CannonControls** script which need a reference to the cannon barrel (the part of cannon which actually rotates and fire the cannon balls), the cannon can be rotated by **w, a,s and d** keys.
 
 ![demoSceneStart](https://user-images.githubusercontent.com/23467551/140632879-9d5d0ff8-1370-4498-b9bd-c050f266acc9.png)
-
-Open the start scene it has a basic cannon setup press **w** and **s** keys to move in up or down. 
 
 First let's create a simple rigidbody we will use it as our projectile object, if we give this projectile an initial velocity, then it will move in direction of velocity, after launch the only force on it will be acceleration due to gravity.
 
@@ -45,9 +43,13 @@ public class Projectile : MonoBehaviour
 }
 ```
 
+Attach this script to any prefab that you want to use as cannon balls, here is my setup it's just a simple ball with a sphere collider and a rigidbody, make sure to setup the rigidbody as I have, see this image.
+
+![Unity_fyEAcHcE8r](https://user-images.githubusercontent.com/23467551/140638763-3dd9f297-7c83-4e50-9958-942175b77495.png)
+
 now all we need is to give this projectile an initial velocity and set a constant acceleration to move it realistically, now to programme the cannon to fire cannon balls, create a new script **Cannon** and in it add
 - a new class **ProjectileData** this will hold initial data for our projectile like launch speed and gravity.
-- a reference to the cannon ball projectile prefab and a float field **timeDelay** (see the comments for details).
+- a reference to the cannon ball projectile prefab, the launch position, and a float field **timeDelay** (see the comments for details).
 
 ```
 public class Cannon : MonoBehaviour
@@ -80,6 +82,10 @@ public class Cannon : MonoBehaviour
     Vector3 acceleration = Vector3.zero;
 }
 ```
+
+before proceed any further setup the cannon ball prefab and launch position.
+
+![referencesSetup](https://user-images.githubusercontent.com/23467551/140639495-37c2d52b-7609-406d-bc0e-3fcf445270bc.png)
 
 To launch the projectile we only have to give it an initial velocity, remember velocity is a vector quantity with both speed and direction, in this case the direction is the forward facing direction of cannon and speed is set manually, so now to do this in code create a new method **CalculateProjectileData** to calculate and set initial launch data for projectile.
 
@@ -120,7 +126,9 @@ We want to fire the cannon when user hits the Space key, when the cannon is fire
     }
 ```
 
-and the results... change values from inspector to get different trajectories.
+and the results... change the params **speed** and **gravity** from inspector to get different trajectories.
+
+![realisticProjectile](https://user-images.githubusercontent.com/23467551/140638933-08efff76-2a9b-437a-8012-a48fe65af4e7.gif)
 
 This was simple, but now for the fun part, right now although we can change some variables like speed, gravity and launch angle and have the projectile follow completly different paths at differnt speeds but we have no control of where the projectile will land, in this part we will actually make the projectile always hit some particular target, so ok let's do that.
 
@@ -220,6 +228,12 @@ I have added an enum to change which type of calculation to be done when we hit 
     }
 ```
 
+you also need to set a target to hit, I have set it the barrels you see the background.
+
+![targetSetup](https://user-images.githubusercontent.com/23467551/140639211-bc13d396-72f2-4001-9623-6f40e811a004.png)
+
 and here are the final results, cannon ball always hit the target no matter what initial speed or launch angle are and that's it for first part in next part we will calculate and draw the projectile's trajectory, see you till then.
+
+![customProjectile](https://user-images.githubusercontent.com/23467551/140639289-adff2db1-0913-47e2-b4e9-ccd76ee41b76.gif)
 
 ### Everything seems good now, tutorial is done, report any mistakes, provide feedback anything is welcome AND if you like it support me on [CodeCreatePlay](https://www.patreon.com/CodeCreatePlay).
