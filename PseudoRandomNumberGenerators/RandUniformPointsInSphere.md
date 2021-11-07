@@ -1,5 +1,7 @@
 ### This tutorial is made for [CodeCreatePlay](https://www.patreon.com/CodeCreatePlay).
 
+![sbOS9EhmGv](https://user-images.githubusercontent.com/23467551/140644126-a07f3417-388c-494a-91ee-51ecc33ba75b.gif)
+
 Among multiple methods for distributing points in a sphere, the one we will be using involves **[Spherical polar coordinates](https://mathinsight.org/spherical_coordinates#:~:text=Spherical%20coordinates%20determine%20the%20position,angle%20%CE%B8%20from%20polar%20coordinates.)** in which location of a point in 3d space is determined based on **distance ρ or r from origin and two angles θ (theta) and φ (phi)**, before we proceed take a look at **[uniformly distributing points in a circle tutorial](https://github.com/rehmanx/CodeCreatePlay/blob/main/PseudoRandomNumberGenerators/RandUniformPointsInCircle.md).**
 
 ![spherical_coordinates](https://user-images.githubusercontent.com/23467551/136846587-7ae62649-6762-41f8-9e08-b4eee38e9971.png)
@@ -66,9 +68,9 @@ public class RandUniformPointsInSphere : MonoBehaviour
 }
 ```
 
-![tklTcJFAOG](https://user-images.githubusercontent.com/23467551/137183298-075c4fcd-e914-4e5f-8353-f01434bd8c25.gif)
+![Unity_FUwPdNUBGp](https://user-images.githubusercontent.com/23467551/140643819-7424e98c-f5f9-447a-84d4-2ed2fd390d61.jpg)
 
-This gif shows results from out current approach, this definately is not unifrom distribution, there are two problems with this distribution.
+Above image shows results from out current approach, this definately is not unifrom distribution, there are two problems with this distribution.
 1. the points are clustered at the origin close to axis of rotation.
 2. the other problem is more points are distributed cylinderically from north to south pole of sphere.
 
@@ -117,7 +119,7 @@ Now we know the distributions of φ and θ let's update the code.
 
 If you are curious where the **Power** function comes from see the previous circle tutorial and now for the results.
 
-![bTSKARi1QG](https://user-images.githubusercontent.com/23467551/137982118-5abb40e5-262b-4301-ab91-43a818ca3c0b.gif)
+![Unity_6C5UQYg9Cn](https://user-images.githubusercontent.com/23467551/140643977-92aedbfe-5a22-44f2-a2b0-1954bf0874f3.jpg)
 
 - currently these generated points are generated at origin in world space, if you want them to respect the transforms of the gameobject you attached the RandUniformPointsInSphere.cs script, then convert them to local space of gameobject using transform.TransformPoint utility method. 
 
