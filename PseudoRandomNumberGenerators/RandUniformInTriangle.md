@@ -2,6 +2,10 @@
 
 ![Jl9UXieATR](https://user-images.githubusercontent.com/23467551/140970439-db4842a6-9c93-4dc3-b6df-5834584969e2.gif)
 
+The easiest way to understand this algorithm is to generate a uniform distribution in a parallelogram (squares, rectangles etc.), for a parallelogram with origin at **0** we can form a vector to get a uniform distribution in the parallelogram. 
+ 
+ if **u** is uniformly distributed between **0** and **1** then **v** = **1 - u** is also distributed randomly between 0 and 1, we can use this transformation to convert a point on the parallelogram to a point that is on the triangle.
+ 
 First let's visualize the polygon, create a new unity c# script **RandUniformInTriangle** and the fields for visualizing the polygon, sample size, scale of polygon, debug size of generated points and a list to save generated points, see the comments for details.
 
 ```
