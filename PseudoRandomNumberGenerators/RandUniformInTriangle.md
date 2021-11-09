@@ -1,6 +1,7 @@
 ### _This tutorial is made for [CodeCreatePlay](https://www.patreon.com/CodeCreatePlay)_.
 
-Generating a uniform distribution in a triangle is prequel to   '
+![Jl9UXieATR](https://user-images.githubusercontent.com/23467551/140970439-db4842a6-9c93-4dc3-b6df-5834584969e2.gif)
+
 First let's visualize the polygon, create a new unity c# script **RandUniformInTriangle** and the fields for visualizing the polygon, sample size, scale of polygon, debug size of generated points and a list to save generated points, see the comments for details.
 
 ```
