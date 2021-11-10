@@ -91,7 +91,7 @@ We will use [Handles](https://docs.unity3d.com/ScriptReference/Handles.html) to 
 
 ![01](https://user-images.githubusercontent.com/23467551/135799307-879e1583-24cd-4527-beb4-6ea0e5a185df.gif)
 
-- Now we have a circle at the origin and with the specified radius, but right now if you move, rotate or scale **RandUniformPointsInCircle** gameObject the circle does not repsects it's transformation, this is because circle is in world space, let's fix this by converting them from world to local space of **RandUniformPointsInCircle** gameObject using [tranform.TransformPoint](https://docs.unity3d.com/ScriptReference/Transform.TransformPoint.html) utility method of unity's transform component.
+- Now we have a circle at the origin and with the specified radius, but right now if you move, rotate or scale the gameObject this script is attached to the circle does not repsects it's transformation, this is because circle is in world space, let's fix this by converting them from world to local space of **RandUniformPointsInCircle** gameObject using [tranform.TransformPoint](https://docs.unity3d.com/ScriptReference/Transform.TransformPoint.html) utility method of unity's transform component.
 
 ```
     private void DrawCircle()
