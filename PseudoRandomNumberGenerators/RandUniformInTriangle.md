@@ -2,13 +2,13 @@
 
 ![Jl9UXieATR](https://user-images.githubusercontent.com/23467551/140970439-db4842a6-9c93-4dc3-b6df-5834584969e2.gif)
 
-The easiest way to understand this algorithm is to generate a uniform distribution in a parallelogram (squares, rectangles etc.), for a parallelogram with origin at **0** we can form a vector **p = u1*a + u2*b** where **u1, u2 ~ U(0, 1)** to get a uniform distribution in the parallelogram. 
+The easiest way to understand this algorithm is to generate a uniform distribution in a parallelogram (squares, rectangles etc.), for a parallelogram with origin at **0** we can form a vector (**_highlightened in yellow**) **p = u1*a + u2*b** where **u1, u2 ~ U(0, 1)** to get a uniform distribution in the parallelogram. 
  
  ![Unity_pgr7JI8xHJ](https://user-images.githubusercontent.com/23467551/141053684-abbc4ecc-043a-42d5-bfb4-06785bb89c13.png)
  
  if **u** is uniformly distributed between **0** and **1** then **v** = **1 - u** is also distributed randomly between 0 and 1, we can use this transformation to convert a point on the parallelogram to a point that is on the triangle.
  
-First let's visualize the polygon, create a new unity c# script **RandUniformInTriangle** and the fields for visualizing the polygon, sample size, scale of polygon, debug size of generated points and a list to save generated points, see the comments for details.
+First let's visualize the polygon, create a new unity c# script **RandUniformInTriangle** and the fields for visualizing the polygon, sample size, scale of polygon, debug size of generated points and a list to save generated points, see the comments for details, also I am using **unity's transform.TransformPoint** to convert from world to local space of the transform this script is attached to.
 
 ```
     // public fields-------------------------
@@ -44,31 +44,37 @@ I am using unity's **OnDrawGizmos** method draw the polygon and the generated po
         if (polygon.Length < 4)
             return;
 
+        // draw a sphere on origin.
+        Gizmos.color = Color.blue;
+        Gizmos.DrawSphere(transform.TransformPoint(polygon[0]), 0.1f);
+
         // loop through all the polygon points and connect them.
         for (int i = 0; i < polygon.Length; i++)
         {
-            _p1 = polygon[i] * scale; // extend it by scale
+            _p1 = polygon[i] * scale; // extend vector by scale
 
             if (i + 1 >= polygon.Length)
                 _p2 = polygon[0] * scale;
             else
                 _p2 = polygon[i + 1] * scale;
 
-            Gizmos.color = Color.red;
-            Gizmos.DrawLine (transform.TransformPoint(_p1), transform.TransformPoint(_p2));
+            // other lines of triangle in blue.
+            if (i == 0 || i == 3)
+                Gizmos.color = Color.blue;
+            else
+                Gizmos.color = Color.red;
 
-            Gizmos.color = Color.blue;
-            Gizmos.DrawSphere(transform.TransformPoint(_p1), 0.025f);
+            Gizmos.DrawLine(transform.TransformPoint(_p1), transform.TransformPoint(_p2));
+
+            // the diagonal line of triangle
+            Gizmos.color = Color.white;
+            Gizmos.DrawLine(transform.TransformPoint(polygon[3] * scale), transform.TransformPoint(polygon[1] * scale));
         }
-
-        // a diagonal line to show the triangle
-        Gizmos.color = Color.white;
-        Gizmos.DrawLine(transform.TransformPoint(polygon[3] * scale), transform.TransformPoint(polygon[1] * scale));
 
         // and finally visualize the generated data.
         Gizmos.color = Color.yellow;
         for (int i = 0; i < points.Count; i++)
-            Gizmos.DrawSphere(points[i], debugPointSize);
+            Gizmos.DrawSphere(transform.TransformPoint(points[i]), debugPointSize);
     }
 ```
 
@@ -95,9 +101,9 @@ Let's perform the first step and generate uniform points in the parallelogram, c
     }
 ```
 
-Points are now uniformly generated in parallelogram.
+My results with sample size = 5000 and scale = 5f;
 
-
+![Unity_wyKMsSYdFV](https://user-images.githubusercontent.com/23467551/141090546-4841ef8c-9185-48ad-bcd8-f5890e57d4ae.png)
 
 Now let's perform the reflection step,
 
@@ -122,22 +128,9 @@ Now let's perform the reflection step,
     }
 ```
 
-if you have seen my previous tutorials on pseudo random number generators then you know what to do, I will give you a hint **transform.TansformPoint**, otherwise just update the code in **OnDrawGizmo** method and watch any of my previous tutorial.
+my results with same params
 
-```
-    private void OnDrawGizmos()
-    {
-        // ** previous code **
-        // and finally visualize the generated data.
-        Gizmos.color = Color.yellow;
-        for (int i = 0; i < points.Count; i++)
-            Gizmos.DrawSphere(transform.TransformPoint(points[i]), debugPointSize);
-    }
-```
-
-and now you can move, rotate and scale the points.
-
-
+![Unity_SoWxc69tDz](https://user-images.githubusercontent.com/23467551/141090869-d87f9852-1c89-4717-8f33-64259a5f91cf.png)
 
 and that's it uniform points in a triangle.
 
