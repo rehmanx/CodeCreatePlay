@@ -2,7 +2,7 @@
 
 ![sbOS9EhmGv](https://user-images.githubusercontent.com/23467551/140644126-a07f3417-388c-494a-91ee-51ecc33ba75b.gif)
 
-Among multiple methods for distributing points in a sphere, the one we will be using involves **[Spherical polar coordinates](https://mathinsight.org/spherical_coordinates#:~:text=Spherical%20coordinates%20determine%20the%20position,angle%20%CE%B8%20from%20polar%20coordinates.)** in which location of a point in 3d space is determined based on **distance ρ or r from origin and two angles θ (theta) and φ (phi)**, before we proceed take a look at **[uniformly distributing points in a circle tutorial](https://github.com/rehmanx/CodeCreatePlay/blob/main/PseudoRandomNumberGenerators/RandUniformPointsInCircle.md).**
+Among multiple methods for distributing points in a sphere, the one we will be using involves **[Spherical polar coordinates](https://mathinsight.org/spherical_coordinates#:~:text=Spherical%20coordinates%20determine%20the%20position,angle%20%CE%B8%20from%20polar%20coordinates.)** in which location of a point in 3d space is determined based on **distance ρ or r from origin and two angles θ (theta) and φ (phi)**, before we proceed take a look at **[uniformly distributing points in a circle tutorial](https://github.com/rehmanx/CodeCreatePlay/blob/main/PseudoRandomNumberGenerators/RandUniformInCircle.md).**
 
 ![spherical_coordinates](https://user-images.githubusercontent.com/23467551/136846587-7ae62649-6762-41f8-9e08-b4eee38e9971.png)
 
