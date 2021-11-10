@@ -2,7 +2,7 @@
 
 ![Jl9UXieATR](https://user-images.githubusercontent.com/23467551/140970439-db4842a6-9c93-4dc3-b6df-5834584969e2.gif)
 
-Random uniform distribution in a triangle is a prerequisite to random uniform distribution in a polygon, the easiest way to understand this algorithm is to generate a uniform distribution in a parallelogram (squares, rectangles etc.), for a parallelogram with origin at **0** we can form a vector (**_highlightened in yellow**) **p = u1*a + u2*b** where **u1, u2 ~ U(0, 1)** to get a uniform distribution in the parallelogram. 
+Random uniform distribution in a triangle is a prerequisite to random uniform distribution in a polygon, the easiest way to understand this algorithm is to generate a uniform distribution in a parallelogram (squares, rectangles etc.), for a parallelogram with origin at **0** we can form a vector (**_highlightened in yellow_**) **p = u1*a + u2*b** where **u1, u2 ~ U(0, 1)** to get a uniform distribution in the parallelogram. 
  
  ![Unity_pgr7JI8xHJ](https://user-images.githubusercontent.com/23467551/141053684-abbc4ecc-043a-42d5-bfb4-06785bb89c13.png)
  
