@@ -78,6 +78,10 @@ I am using unity's **OnDrawGizmos** method draw the polygon and the generated po
     }
 ```
 
+a simple visualization;
+
+![Unity_FPfg1zgwX2](https://user-images.githubusercontent.com/23467551/141091728-dc72c872-2e63-4934-8252-5cb9cf7fe7ec.png)
+
 Let's perform the first step and generate uniform points in the parallelogram, create a new method **UniformInTriangle** and call it from **Start** method and hit play.
 
 ```
