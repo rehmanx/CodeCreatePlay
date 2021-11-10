@@ -43,7 +43,7 @@ public class Projectile : MonoBehaviour
 }
 ```
 
-Attach this script to any prefab that you want to use as cannon balls, here is my setup it's just a simple ball with a sphere collider and a rigidbody, make sure to setup the rigidbody as I have, see this image.
+Attach this script to any prefab that you want to use as cannon balls, here is my setup it's just a simple ball with a sphere collider and a rigidbody, make sure to setup the rigidbody as I have, see this image, If you are using project files that I have provided then this ball is located in DemoScene\BattleCannon\Prefabs/cannon_ball.
 
 ![Unity_fyEAcHcE8r](https://user-images.githubusercontent.com/23467551/140638763-3dd9f297-7c83-4e50-9958-942175b77495.png)
 
