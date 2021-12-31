@@ -37,7 +37,7 @@ size : 2 km square.
 art style : realistic.  
 references images :*
 
-![Image](images/referenceImages.jpg)
+![Image](images/referenceImages.jpg "Reference Images")
 
 *As an important note, the workflow for creating terrains is that we always begin by defining larger shapes, composition of terrain then creating medium details and finally smaller finer details, and always remember to compare what you are creating with your reference images to keep things consistent and natural.*
 
