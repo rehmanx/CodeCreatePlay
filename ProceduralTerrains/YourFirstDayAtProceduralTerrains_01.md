@@ -14,10 +14,16 @@ As I have mentioned in my intro most if not all of my tutorials are aimed at int
 
 First let's setup blender scene for a terrain creation workflow so perform the following steps.
 1. Create a new scene and delete all items. 
-2. Landscapes are large with default camera clip settings it is not possible to view entire landscape at once, so set camera's far clip position to a large value, I have set it to 5km.  ![PerlinNoise](images/2021-12/blender_fpA7Ib6osH.png)
+2. Landscapes are large with default camera clip settings it is not possible to view entire landscape at once, so set camera's far clip position to a large value, I have set it to 5km.
+
+![PerlinNoise](images/2021-12/blender_fpA7Ib6osH.png)
+
 3. Since we want to export this terrain to unity which uses metric units system so set blender to use that as well, it's not necessary but it will help to keep scale constant between unity and blender. 
+
 ![PerlinNoise](images/2021-12/blender_lFnddwqrEH.png) 
+
 4. Also make sure render engine is set to cycles. 
+
 ![PerlinNoise](images/2021-12/blender_kTXITvzhWS.png)
 
 In blender there are two ways to generate fractal noises 
