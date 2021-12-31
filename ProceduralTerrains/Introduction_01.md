@@ -4,9 +4,7 @@ Procedural means creating things algorithmically, you input some data into an al
 
 Fractal noises are one such category of algorithms, you input some parameters and in almost all cases the output are 0 to 1 normalized values, they have uses in other fields however in CG they are mostly use for creating procedural textures, terrains, rocks and sometimes generative art.
 
-Various fractal noises examples
-
-![PerlinNoise](images/noiseExamples.jpg)
+![PerlinNoise](images/noiseExamples.jpg "Left: PerlinNoise Right: VoronoiNoise")
 
 In this first introduction to procedural terrain creation techniques we will utilize various noises such as "perlin" and "veronai* to generate a procedural terrain shape, we will also create materials to generate height maps and splat maps for exporting this terrain to other software packages like unity or unreal game engines.
 
