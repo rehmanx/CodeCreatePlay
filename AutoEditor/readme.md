@@ -1,6 +1,6 @@
 ## Unity AutoEditor 
 
-![Imge](Images/brand.png)
+![Imge](images/brand.png)
 
 AutoEditor for unity allows to automatically creates Unity editor gui elements and significantly reduces the time to write a tool and allows developers to focus more on writing their programs.
 It works by extending unity with some custom attributes which can be placed on C# fields, almost all C# fields and some unity's gui elements are supported, here is a complete list  
@@ -135,7 +135,7 @@ public class DemoEditor : Editor
 
 7. Now in **OnInspectorGUI** method just call **Build** method of **settingsAutoEd**, and there you have it.
 
-![Imge](Images/Unity_SPnMpkSI2o.png)
+![Imge](images/Unity_SPnMpkSI2o.png)
 
 8. Use **ControlType.Space** to add space between gui elements.
 
@@ -153,7 +153,7 @@ public GameObject gameObject = null;
 public Texture2D texture2d = null;
 ```
 
-![Imge](Images/Unity_im2sJtQYTT.png)
+![Imge](images/Unity_im2sJtQYTT.png)
 
 9. It is also possible to create horizontal layout just pass **layoutHorizontal = 1** to begin a horizontal layout and **layoutHorizontal = -1** when you want to end it.
 
@@ -173,7 +173,7 @@ public bool check_2 = false;
 public bool check_3 = false;
 ```
 
-![Imge](Images/Unity_GGltQEle07.png)
+![Imge](images/Unity_GGltQEle07.png)
 
 10. There is just one more feature I.E **GameObjectsList**, it's a simple list for referencing GameObjects or prefabs with a select and remove button, it's an editor only function and take several functions as arguments and the target list of GameObjects, to use it open **DemoEditor.cs** and add the following code (see comments for details).
 
@@ -243,7 +243,7 @@ and the corresponding additions to **Demo.cs**
 
 & that is it.
 
-![Imge](Images/Unity_Ksz3LyMv9G.png)
+![Imge](images/Unity_Ksz3LyMv9G.png)
 
 Also join this discord channel for any sorts of comments.
 
