@@ -91,7 +91,7 @@ public class Demo : MonoBehaviour
 }
 ```
 
-5. Now create an **AutoEditor** for settings class, autoEditor takes type of class and a reference to the object itself, and that's it, here I am using a c# **Getter** to create if null and and return the settings auto editor.
+5. Now create an **AutoEditor** instance for settings class, autoEditor takes type of class and a reference to the object itself, here I am using a C# **Getter** to create a new instance if null and and return the autoEditor instance for the settings class.
 
 ```
     private AutoEditor settingsAutoEd = null;
@@ -134,6 +134,13 @@ public class DemoEditor : Editor
 ```
 
 7. Now in **OnInspectorGUI** method just call **Build** method of **settingsAutoEd**, and there you have it.
+
+```
+    public override void OnInspectorGUI()
+    {
+        demo.SettingsAutoEd.Build();
+    }
+```
 
 ![Imge](images/Unity_SPnMpkSI2o.png)
 
