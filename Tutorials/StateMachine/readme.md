@@ -1,0 +1,179 @@
+### This tutorial is about creating a StateMachine decision making algorithm to create a basic AI NPC character that will
+
+1. Wake up early in the morning at his home
+2. Wander around a bit
+3. Go to work at a lumberjack
+4. Rest at a campfire when fatigued
+5. Come back to home in evening
+
+### Skills required
+1. Intermediate knowledge of programming in C# (abstract classes and functions, getter / setters, inheritance etc).
+2. Intermediate knowledge of unity.
+
+AI is all about decision making and if you are new to AI programming then one of the primitive algorithm that you will learn to code beyond simple decision trees and if else statements is a finite state machine.
+
+A state machine basically has two parts
+1. List of States
+2. State Machine manager class itself
+3. Mostly if not always there is also a global state as well.
+
+The idea behind a state machine is that an entity is managed by a state machine 
+1. can have a finite set of states 
+2. the entity can only be in one given state at a time.
+3. the states themselves are responsible for switching from one state to next.
+
+As an example all the above activities of NPC that we are going to code are separate states managed by a central **StateMachine**.
+
+If you are a patron download project files for this tutorial, it has a starting scene and necessary assets setup.
+
+With this introduction let's code a **Finite State Machine**.
+
+1. Go to **Tutorial > StateMachine > Demo > Scenes** and open **StartScene**.
+2. In **Tutorial > StateMachine > Scripts > StateMachine** create two new C# scripts **StateMachine.cs** and **State.cs**.
+3. Open **State.cs** in visual studio, this is our base state class, the base NPC state class will drive from this, I have put both **StateMachine.cs** and **State.cs** in a separate namespace to avoid conflicting names.
+
+```
+namespace Game_AI
+{
+    [System.Serializable]
+    public abstract class State
+    {
+    }
+}
+```
+
+4. Each state will have a unique identifier, we can do this with a C# **GUID** (Global Unique Identifier), I am saving it as a string otherwise it won't be serialized by unity by default.
+
+```
+    [System.Serializable]
+    public abstract class State
+    {
+        // ** public fields **
+        [SerializeField] private string guid = "";
+
+
+        // ** getter / setters ** 
+        public string GUID { get { return guid; } }
+
+
+        // constructor
+        public State()
+        {
+            guid = System.Guid.NewGuid().ToString();
+        }
+    }
+```
+
+5. In a state machine when we switch from a current state to a new state, three events occur in order.  
+   * the current state is exited
+   * the new state is entered / started
+   * the new state is executed every frame. (this execution keeps on until a new switch take place).   
+   
+
+We can elegantly handle these three events with abstract method which every state must implement.
+
+```
+    public abstract class State
+    {
+        ^^ previous code ^^
+    
+        public abstract void Enter();
+        public abstract void Execute();
+        public abstract void Exit();
+    }
+```
+
+6. With this out **State.cs** is done, now open **StateMachine.cs**, let's also keep this simple for now and only add features when required.
+
+```
+namespace Game_AI
+{
+    [System.Serializable]
+    public class StateMachine
+    {
+    }
+}
+```
+
+7. Let's start with keeping references of current and global states.
+
+```
+    [System.Serializable]
+    public class StateMachine
+    {
+        // ** public fields **
+        [SerializeField] private State currentState = null;
+        [SerializeField] private State globalState = null;
+
+
+        // ** getter / setters ** 
+        public State CurrentState { get { return currentState; } }
+        public State GlobalState { get { return globalState; } }
+
+
+        // constructor
+        public StateMachine(State global)
+        {
+            globalState = global;
+        }
+    }
+``` 
+
+8. As you can see the **global state** is set only once in the constructor, however to change **current executing state** needs more than that, add a new method **SwitchState** to change current executing state, see the comments for details
+
+```
+       ^^ previous code ^^
+
+        public void SwitchState(State newState)
+        {
+            // make sure new state is not null
+            if(newState == null)
+            {
+                Debug.Log("Cannot set StateMachine State to null");
+                return;
+            }
+
+            // this is for first time when current state will be null
+            if(currentState == null)
+            {
+                newState.Enter();
+                currentState = newState;
+                return;
+            }
+
+            // make sure we have a new state
+            if(newState.GUID == currentState.GUID)
+                return;
+
+            // also make sure new state is not the global state
+            if (newState.GUID == globalState.GUID)
+                return;
+
+            // exit current state
+            currentState.Exit();
+
+            // enter new state
+            newState.Enter();
+
+            // set current state to new state
+            currentState = newState;
+        }
+```
+
+9. Now let's add a new method **Update** that will execute every frame and it will update global and current states.
+
+```
+       ^^ previous code ^^
+
+        public void Update()
+        {
+            if (globalState != null)
+                globalState.Execute();
+
+            if(currentState != null)
+                currentState.Execute();
+        }
+```
+
+10. And that's it basically we are done, but before we leave for creating an actual NPC with this state machine, let's do a simple test with this **Finite StateMachine.cs** implementation of ours to see if it's properly functional at all without any errors.
+
