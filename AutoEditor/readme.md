@@ -252,5 +252,4 @@ and the corresponding additions to **Demo.cs**
 
 ![Imge](images/Unity_Ksz3LyMv9G.png)
 
-Also join this discord channel for any sorts of comments.
-
+Also join this discord channel [LINK](https://discord.gg/Z7jQSCFzuX "Discord") for any sorts of comments.
