@@ -1,4 +1,4 @@
-### This tutorial is about creating a StateMachine decision making algorithm to create a basic AI NPC character that will
+### This tutorial is about creating a StateMachine decision making algorithm to create a AI_character that will
 
 1. Wake up early in the morning at his home
 2. Wander around a bit
@@ -115,6 +115,10 @@ namespace Game_AI
         public StateMachine(State global)
         {
             globalState = global;
+
+            // this can be null, but that's OK
+            if(globalState != null)
+                globalState.Enter();
         }
     }
 ``` 
@@ -177,3 +181,110 @@ namespace Game_AI
 
 10. And that's it basically we are done, but before we leave for creating an actual NPC with this state machine, let's do a simple test with this **Finite StateMachine.cs** implementation of ours to see if it's properly functional at all without any errors.
 
+11. Let's start this by creating a **AI_Character.cs** script in **CCP_Tutorials > StateMachine > Scripts**, attach this script to any game object.
+
+```
+[System.Serializable]
+public class AI_Character : MonoBehaviour
+{
+    private void Start()
+    {
+    }
+
+    private void Update()
+    {
+    }
+}
+```
+
+12. Create two new classes **TestState_1** and **TestState_2** both are derived from abstract **State** class and implement the abstract methods of **State** class, you can see that test classes maintains a reference to the **AI_Character** that will own them, these classes also log messages in unity console on **Enter** and **Exit** methods. 
+
+```
+[System.Serializable]
+public class TestState_1 : Game_AI.State
+{
+    private AI_Character ai_character = null;
+
+
+    public TestState_1(AI_Character _ai_character) : base()
+    {
+        ai_character = _ai_character;
+    }
+
+    public override void Enter()
+    {
+        Debug.Log("Entered : TestState 1");
+    }
+
+    public override void Execute()
+    {
+    }
+
+    public override void Exit()
+    {
+        Debug.Log("Exited : TestState 1");
+    }
+}
+
+
+[System.Serializable]
+public class TestState_2 : Game_AI.State
+{
+    private AI_Character ai_character = null;
+
+
+    public TestState_2(AI_Character _ai_character) : base()
+    {
+        ai_character = _ai_character;
+    }
+
+    public override void Enter()
+    {
+        Debug.Log("Entered : TestState 2");
+    }
+
+    public override void Execute()
+    {
+    }
+
+    public override void Exit()
+    {
+        Debug.Log("Exited : TestState 2");
+    }
+}
+```
+
+13. We want both these test state classes to execute for a fixed time and then switch to next state, to do this add a new field **c** and update **Enter** and **Execute** methods.
+
+```
+
+```
+
+15. Back to **AI_Character** class, let's create a reference to **StateMachine** class and our two test state classes, finally set current state of **AI_Character** in **Start method** and call the **Update method** of state machine from **Update method** of **AI_Character** class.
+
+```
+    // create references to state machine and test states
+    public Game_AI.StateMachine stateMachine = default;
+    public TestState_1 testState_1 = default;
+    public TestState_2 testState_2 = default;
+
+
+    private void Start()
+    {
+        stateMachine = new Game_AI.StateMachine(null);
+
+        testState_1 = new TestState_1(this);
+        testState_2 = new TestState_2(this);
+
+        // switch to 
+        stateMachine.SwitchState(testState_1);
+    }
+
+    private void Update()
+    {
+        // update state machine every frame.
+        stateMachine.Update();
+    }
+```
+
+16. Enter **PlayMode** if everything is going well then you will see log messages in unity console.
