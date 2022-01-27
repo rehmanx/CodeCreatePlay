@@ -1,10 +1,5 @@
-### This tutorial is about creating a StateMachine to create a AI_character routine that you will find in most typical RPGs
+### This tutorial is about creating a StateMachine to create a AI_characters routines that you will find in most typical RPGs
 
-1. Wake up early in the morning at his home
-2. Wander around a bit
-3. Go to work at a lumberjack
-4. Rest at a campfire when fatigued
-5. Come back to home in evening
 
 ### Skills required
 1. Intermediate knowledge of programming in C# (abstract classes and functions, getter / setters, inheritance etc).
