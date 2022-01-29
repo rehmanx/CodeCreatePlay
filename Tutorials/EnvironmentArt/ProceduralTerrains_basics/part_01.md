@@ -12,9 +12,9 @@ In this tutorial, you will learn how to create a procedural terrain. We will sta
 2. You should have some art assets including trees, grasses, rocks and terrain textures that work with unity's **URP render pipeline**.
 3. A terrain shader or script that can apply **splat maps** for unity terrain.
 
-**If you are a **Patreon** than you can download project files for this tutorial which has all the scenes and assets included and setup.**
+**If you are a **[Patreon](https://www.patreon.com/CodeCreatePlay)** than you can download project files for this tutorial which has all the scenes and assets included and setup.**
 
-**DM me on **CodeCreatePlay** page for any to report mistakes or give feedback.**
+**DM me on **[CodeCreatePlay](https://www.patreon.com/CodeCreatePlay)** page for any to report mistakes or give feedback.**
 
 ### Introduction
 Procedural means generating data mathematically, behind these algorithms are mathematical formulae that take input from user and output some random yet predictable result.
@@ -31,7 +31,7 @@ Terrain size : 1 km
 Type : typical grasslands with forest areas  
 Time of day : clear evening  
 
-![Inage](images/part_01/moodboard.jpg)
+![Inage](images/part_01/moodBoard.jpg)
 
 ### Blender scene setup
 First we will prepare a scene that will make sure for smooth export to unity or unreal engine and also for viewing and editing landscapes in blender 3D viewpoint.
@@ -94,6 +94,6 @@ Now move, rotate, scale **largeShapes_01_mod** to randomize terrain shape.
    ![Inage](images/part_01/15.png)
    
    
-### Tutorial is done & if you like it support me on CodeCreatePlay, it means to me a lot.
+### Tutorial is done & if you like it support me on [CodeCreatePlay](https://www.patreon.com/CodeCreatePlay), it means to me a lot.
  
  
