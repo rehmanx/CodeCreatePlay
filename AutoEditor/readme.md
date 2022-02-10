@@ -39,7 +39,7 @@ As of **version 1.0** Currently there are only 3 attributes,
 
 *There is a demo included in **DemoFolder** which shows entire functionality of AutoEditor.*
 
-Join this Discord channel as well [LINK](https://discord.gg/Z7jQSCFzuX "Discord").
+Join this Discord channel [LINK](https://discord.gg/Z7jQSCFzuX "Discord") to meet other developers using AutoEditor.
 
 ### Step by step instruction
 
@@ -254,4 +254,4 @@ and the corresponding additions to **Demo.cs**
 
 ![Imge](images/Unity_Ksz3LyMv9G.png)
 
-Discord channel [LINK](https://discord.gg/Z7jQSCFzuX "Discord").
+Join this Discord channel [LINK](https://discord.gg/Z7jQSCFzuX "Discord") to meet other developers using AutoEditor.
