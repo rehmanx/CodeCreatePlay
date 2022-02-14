@@ -109,7 +109,7 @@ Here are my values.
 
     ![Image](images/heightMap/12.png)
 
-13. Unity terrain system can only accept **.raw** file formats, so to convert **.png** to raw use some online image format conversion, however I have opened it in photoshop and saved as **photoshop raw**.
+13. Unity terrain system can only accept **.raw** file formats, so to convert **.png** to raw use some online image format conversion, however here I have opened it in photoshop and saved it as **photoshop raw**.
 
 14. 
 
