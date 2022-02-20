@@ -2,3 +2,6 @@ ProceduralTerrains/images/referenceImagesMaster.psd
 *.backup
 *.psd
 *.meta
+*.blend
+*.blend1
+Tutorials/CG_Landscapes/Basic/ProjectFiles/heightMap.png

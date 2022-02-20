@@ -1,4 +1,6 @@
-### Base terrain generation
+## This tutorial is created for [CodeCreatePlay](https://www.patreon.com/CodeCreatePlay, "CodeCreatePlay") patreon page.
+
+### 1. Creating base terrain
 Procedural means generating data algorithmically, in world of terrains and landscapes we do this with procedural noises, almost all specialized terrain generation software world machine, world creator etc. use procedural noises to generate terrain.
 
 Blender is not a specialized terrain creation software but it has built in support for generating different noises.
@@ -47,11 +49,11 @@ As a final step for adding fine details I added another subdivisions modifier ra
 
 ![Image](images/06a.png) 
 
-And there you have it a procedural terrain.
+And there you have it a procedural terrain, that fits the criteria of grasslands and scattered forest areas, from our design document.
 
 ![Image](images/07.png) 
 
-### Creating a height map & importing in unity
+### 2. Creating a height map & importing in unity
 
 **Creating a height map is easy, I will you through the process step by step.**
 
@@ -113,36 +115,83 @@ Here are my values.
 
 14. 
 
-### Creatign a splat-map and texturing
-In last tutorial we created a height map and imported into unity for testing, In this part we will create a splat map in blender and use it to texture out terrain in unity.
-This will not be a step by step tutorial rather I will give you an overview of the process.
+### 3. Creating a splat-map
+In last tutorial we created a height map and imported into unity for testing, In this part, I give you an overview of what a splat map is and show you how to use splatMap shader included with project files.  
+**_Tutorial for creating a splat map shader deserves a seperate tutorial of it's own and so it is for some other day._**
 
-So what is a splat map...? basically splat mapping is a procedural texturing technique for terrains, a splat map is just another image where each RGBA channel of image corresponds to a terrain texture on terrain, for example 
-R(Red) channel can be = dirt texture on terrain
-G(Green) channel can be = grass texture
-B(Blue) channel can be = rock / cliff
-A(Alpha) channel can be = snow 
+**So what is a splat map...?** basically splat mapping is a procedural texturing technique for terrains, a splat map is just another image where each RGBA channel of image corresponds to a terrain texture on terrain, for example  
+R(Red) channel can be = dirt texture on terrain  
+G(Green) channel can be = grass texture  
+B(Blue) channel can be = rock / cliff  
+A(Alpha) channel can be = snow   
 
-So now you know what a splat map is, now I will walk you through the process on how to create a splat map.
+_If you have project files, then you can simply append **splatMap shader** from **terrainFinal.blend** into your blender scene or simple open **terrainFinal.blend** in blender._
 
-Before proceeding just a disclaimer creating splat maps requires good understanding if some mathematical concepts and intermediate knowledge of blender cycles nodes, so if you just want a quick splat map shader use the one provided with project files.
+And here is how the splat map shader looks like.
 
-Since our terrain has no rocks or cliffs instead we have forests, so in our splat map
+![Image](images/splatMap/02.png)
 
-red channel = dirt / ground texture
-green channel = grass texture
-blue = forests map
-alpha = road overlay map
+* The **Steepness** value controls red channel, it means steepness ranging fron 0 to the value you will set, for example as in this image it means steepness from 0 to 5 degreees.
+* The second param **ForestMap** (blue channel) controls the positioning of noise textures used as forest mask.
 
-First for red and green channels, I choose all the surface that are flat beyond some threshold, (since buildings will be placed on flat surfaces) to be dirt / ground texture and everything else is green channel. 
-Terrain surface steepness can be calculated using the formula 
-and to control the blending between steep and flat surfaces I am using a logistics function formula
+Since this terrain has no rocks or cliffs, so in this splat map
+* I have chosen **red channel** to be ground / dirt textures, and selected flat areas 0 to 5 degrees, since this is where buildings will be placed.
+* Green is grass.
+* And blue is forest mask.
 
-For forest map (blue) I am using a noise texture and over laying it on top of existing channels
+![Image](images/splatMap/03.png)
 
-and that's it for a now we will create road overlays map (alpha channel) in some next part.
+Now before baking this splat map, make sure to turn off last two modifiers we added to add small fine details, otherwise you would get noise in your image
 
-Now to bake this splat map,  create new texture splat map 2048 * 2048 with alpha channel.
+![Image](images/splatMap/04.png)
 
-Add a new *image in terrain **splatMap** shader without connecting it to anything, make sure to select it.
+Also change change **View Transform** to **standard** in **Color management.**  
+And now to bake this splat map, open image editor, create a new image, size same as height map.
+
+![Image](images/splatMap/05.png)
+
+Add a new **Image texture** node in shader editor and select the splat map image.
+
+![Image](images/splatMap/06.png)
+
+Now select this **Image texture** node and select the terrain object, go to Bake options and bake a diffuse map.
+
+![Image](images/splatMap/07.png)
+
+Finally save the image as tiff without any compression.
+
+![Image](images/splatMap/08.png)
+
+### 4. Importing heightmap into unity and applying the splat map
+
+Open unity and add a new **GameObject > 3d Object > Terrain** and go to **Terrain settings > Texture resolutions on terrain > import raw and select the heightMap we created earlier (or just grab them from project files if you want to follow along me).**  
+Set the settings as (mac users should set byte order to mac)
+
+![Image](images/UnityImport/01.png)
+
+Terrain size's x and y values are width and length of terrain which is 1-km, and y is height, it will depend on that **MapToRange** node from height map tutorial.  
+
+![Image](images/UnityImport/02.png)
+
+It is calculated as (height = From max - From min value) to get the actual height of terrain.  
+Finally in terrain settings, set **Draw Instanced** to True and set **Pixel error = 1** to get a high quality terrain.
+
+![Image](images/UnityImport/03.png)
+![Image](images/UnityImport/04.png)
+
+We have a height map terrain, now for texturing, import splat map into unity, go to splatMap's **import settings > advanced > set Read/Write enabled to true.**  
+
+![Image](images/UnityImport/05.png)
+
+At this point we need some pbr terrain textures and corresponding terrain layers to texture this terrain, creating pbr textures frm terrains is out of scope of this tutorial however I have provided these textures with corresponding terrain layers in project files.  
+In terrain paint mode set terrain layers in right order
+
+![Image](images/UnityImport/06.png)
+
+To procedurally apply these splat maps we need a terrain shader or script I have provided one in project files.
+Just attach **SplatMap.cs** script to your terrain game object, drag splat map texture to splat map slot and hit **Apply**, and there you have it.
+
+![Image](images/UnityImport/07.png)
+  
+**_Ok that's it for now in next part we will start lightning and look development & if you like this tutorial please support me on [CodeCreatePlay](https://www.patreon.com/CodeCreatePlay, "")_**.
 
